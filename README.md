@@ -1,6 +1,6 @@
-# Customer Intelligence Demo
+# Customer Intelligence Demos
 
-A responsive, clickable prototype for a generic customer-intelligence workflow. All personas, evidence, findings, and outcomes are fictional and directional.
+This repo contains two responsive, static prototypes: a generic customer-intelligence flow and an Innovation Command Center scenario using synthetic personas/cohorts. All scenario records, metrics, evidence, and persona voices are fictional and illustrative.
 
 ## Run locally
 
@@ -10,8 +10,13 @@ python3 -m http.server 4173
 
 Open [http://localhost:4173](http://localhost:4173).
 
+- [Generic customer-intelligence demo](http://localhost:4173/index.html)
+- [Innovation Command Center synthetic demo](http://localhost:4173/nespresso.html)
+
 ## Prototype scope
 
-The prototype covers overview, personas, conversations, studies, journeys, activation, and the learning loop. Actions use deterministic in-memory fixtures so the demo can be replayed with **Reset demo**.
+The generic prototype covers overview, personas, conversations, studies, journeys, activation, and the learning loop. Actions use deterministic in-memory fixtures.
 
-No API or live model integration is wired. The blueprint defers API specifications; when endpoints are ready, each section can replace its fixture reads with a section-level adapter while preserving the shared persona, study, journey, activation, and learning IDs shown in the prototype.
+The ICC demo presents five fabricated customer cohorts, baseline issue ranking, synthetic persona voice, a rule-based 12-month scenario, a provisional Feature Card, and two pillar previews. Its assumptions and demo sequence are documented under `docs/nespresso/`.
+
+No API, live model, Nespresso data, external campaign action, or production integration is wired. The dataset module runs locally in the browser and Node; its 10,000-customer figure is a cohort-count basis, not 10,000 materialized customer records. See [docs/nespresso/scenario-assumptions.md](docs/nespresso/scenario-assumptions.md) before presenting any output.
