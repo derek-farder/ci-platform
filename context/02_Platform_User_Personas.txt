@@ -1,0 +1,217 @@
+Platform User Personas
+Who uses the customer intelligence demo, what they need, and how they behaveWho uses the customer intelligence demo, what they need, and how they behave
+
+ARTIFACT User personas
+VERSION 1.0
+STATUS Demo build baseline
+Generic, non-branded customer intelligence demo
+
+1. How to use this document
+These are product user personas, not synthetic customers. They guide navigation, workflow priority, permissions, terminology, and demo storytelling. The MVP should optimize for the first three while remaining credible to the others.
+2. Maya Chen | Marketing Strategy Lead
+MINDSET I need to narrow the options before we spend.
+
+Attribute
+Detail
+Priority
+Primary
+Role summary
+Turns growth priorities into audience, message, and campaign decisions.
+Core measures
+Decision confidence; speed to test; expected lift
+Most important screens
+Home; Panel; Study findings; Activation brief
+
+Jobs to be done
+Compare audience response to messages and offers
+Convert findings into an activation-ready recommendation
+Explain the rationale to channel and leadership teams
+Pain points
+Slow, one-off research
+Conflicting audience definitions
+Post-campaign learning that never becomes reusable
+Key scenario
+A campaign brief contains three message directions. Maya runs a panel, escalates the most divisive question into a study, and sends the winning treatment to activation.
+3. Jordan Brooks | CX Journey Lead
+MINDSET Show me where the journey is changing and what to test next.
+
+Attribute
+Detail
+Priority
+Primary
+Role summary
+Monitors end-to-end journeys and prioritizes experience interventions.
+Core measures
+Journey health; completion; effort; satisfaction
+Most important screens
+Journey intelligence; Persona detail; Study builder; Learning loop
+
+Jobs to be done
+Detect emerging friction
+Compare journey moments across audiences
+Create an intervention hypothesis
+Pain points
+Lagging feedback
+Aggregated metrics without meaning
+Difficulty connecting qualitative and behavioral signals
+Key scenario
+A journey alert shows increased abandonment at a decision moment. Jordan compares audiences, asks for likely drivers, and creates an intervention study.
+4. Priya Raman | Insights & Research Manager
+MINDSET Make the signal transparent enough that I can decide what deserves validation.
+
+Attribute
+Detail
+Priority
+Primary
+Role summary
+Designs research and protects methodological credibility.
+Core measures
+Confidence; evidence coverage; validation priority
+Most important screens
+Study builder; Study findings; Evidence drawer; Version history
+
+Jobs to be done
+Configure structured studies
+Inspect evidence and assumptions
+Distinguish directional findings from validated conclusions
+Pain points
+Black-box outputs
+Transcript overload
+Unclear provenance and confidence
+Key scenario
+A stakeholder asks whether a synthetic finding is credible. Priya inspects evidence coverage, confidence, assumptions, and the planned human validation step.
+5. Alex Morgan | Product Manager
+MINDSET Help me sharpen the product hypothesis before I commit roadmap capacity.
+
+Attribute
+Detail
+Priority
+Secondary
+Role summary
+Prioritizes concepts, features, and experience improvements.
+Core measures
+Concept preference; task success; adoption intent
+Most important screens
+Persona chat; Panel; Study findings
+
+Jobs to be done
+Test concepts and prototypes
+Understand segment differences
+Identify failure modes and unmet needs
+Pain points
+Feature debates driven by opinion
+Limited customer access
+Research timelines that miss planning cycles
+Key scenario
+Two product concepts compete for roadmap space. Alex tests both with a panel and structured concept study, then reframes the next live test.
+6. Sam Ortiz | Campaign Operations Manager
+MINDSET Give me a complete brief with the rules and identifiers intact.
+
+Attribute
+Detail
+Priority
+Secondary
+Role summary
+Turns approved strategy into executable campaigns and journeys.
+Core measures
+Launch readiness; exposure; conversion; holdout lift
+Most important screens
+Activation brief; Learning loop
+
+Jobs to be done
+Receive audience and treatment definition
+Confirm channel, timing, KPI, holdout, and suppressions
+Preserve lineage from study to result
+Pain points
+Incomplete handoffs
+Version confusion
+Metrics disconnected from prior predictions
+Key scenario
+An approved finding arrives as an activation brief. Sam confirms the audience, treatment, KPI, holdout, and status before simulating launch.
+7. Elena Park | Customer Intelligence Steward
+MINDSET I need to know what changed, why, and who approved it.
+
+Attribute
+Detail
+Priority
+Oversight
+Role summary
+Maintains evidence quality, persona versions, and approval controls.
+Core measures
+Concordance; evidence quality; audit completeness
+Most important screens
+Version history; Update review; Learning ledger
+
+Jobs to be done
+Review update proposals
+Trace evidence and versions
+Approve, reject, or request more evidence
+Pain points
+Untraceable changes
+Overconfident inference
+No separation between observed and predicted states
+Key scenario
+Actual campaign performance diverges from the prediction. Elena reviews confounders and approves only the persona change supported by enough evidence.
+8. Role-to-capability matrix
+Capability
+Marketing
+CX
+Research
+Product
+Campaign ops
+Steward
+Persona explore
+Lead
+Lead
+Review
+Use
+View
+Govern
+1:1 chat
+Lead
+Use
+Review
+Lead
+View
+Audit
+Panel
+Lead
+Use
+Design
+Lead
+View
+Audit
+Study
+Sponsor
+Sponsor
+Lead
+Sponsor
+View
+Approve method
+Journey live view
+Use
+Lead
+Analyze
+Use
+Operate
+Audit
+Activation brief
+Approve
+Recommend
+View
+Recommend
+Lead
+Audit
+Learning/update
+Review
+Review
+Interpret
+Review
+Operate
+Approve
+
+9. Permission model for the demo
+Viewer: Explore personas, read studies, and view journey and learning results.
+Contributor: Ask questions, create panels, build studies, and draft activation briefs.
+Approver: Approve activation handoffs and persona update proposals.
+Administrator cues are out of scope beyond a visible role label and audit history.

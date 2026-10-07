@@ -1,0 +1,268 @@
+Clickable Demo Build Blueprint
+Scope-controlled content, screen states, data, and demo narrativeScope-controlled content, screen states, data, and demo narrative
+
+ARTIFACT Build blueprint
+VERSION 1.0
+STATUS Demo build baseline
+Generic, non-branded customer intelligence demo
+
+1. Why this document exists
+The PRD defines the product. This blueprint defines the smallest coherent demonstration of it. It combines the screen inventory, scripted data, happy path, and acceptance checklist so the team does not create separate wireframe specifications, data dictionaries, demo scripts, and content matrices before they are needed.
+SCOPE RECOMMENDATION Build one complete loop deeply, then represent the rest through credible secondary states. The primary loop should be: journey signal -> panel -> study -> activation brief -> predicted vs actual -> approved persona update.
+
+2. Recommended package and what not to add
+Artifact
+Why it is needed
+Decision
+PRD
+Defines scope, requirements, and success
+Create now
+Platform user personas
+Prioritizes workflows and language
+Create now
+Synthetic customer personas
+Provides coherent demo actors and response logic
+Create now
+Build blueprint
+Combines IA, states, demo script, and sample data
+Create now
+Full technical architecture
+Not required for a clickable prototype
+Defer
+Detailed API specification
+No live integrations in MVP
+Defer
+Separate design system
+Use a compact component palette inside the prototype
+Defer
+Formal research protocol
+Only needed if synthetic studies become real validation
+Defer
+Operating model / RACI
+Too early for a demo build
+Defer
+
+3. Fictional demo scenario
+A generic company is improving the digital decision journey for a new service bundle. A real-time journey alert shows that customers are pausing at the plan-comparison moment. The team wants to test two message approaches before a broader campaign: "More control" versus "Everything made simple."
+3.1 Scripted hypothesis
+HYPOTHESIS Customers with high need for control will prefer the Control message, while time-poor and reassurance-oriented customers will prefer the Simplicity message. A transparent comparison should outperform either message alone for evidence-driven and value-focused audiences.
+
+3.2 Scripted outcome
+The study recommends a segmented treatment: Control for Avery, Guided Simplicity for Riley and Quinn, Transparent Value for Morgan and Taylor, and Effortless Continuity for Cameron. The campaign simulation predicts stronger completion than the current generic message. Actual results later support most of the prediction but show that Taylor responded better than expected when the message included source transparency. The system proposes a small increase in Taylor's responsiveness to evidence-backed personalization, which the steward approves.
+4. Happy-path demo script
+Step
+Screen
+Demo action
+Story point
+1
+Home
+Open an alert: "Comparison-step hesitation is rising."
+Establish always-on signals and business urgency.
+2
+Journey moment
+Compare hesitation by persona and inspect likely drivers.
+Connect observed behavior to interpretable customer needs.
+3
+Panel
+Ask: "Which message would help you continue?"
+Show individual responses, consensus, divergence, and opportunity.
+4
+Study builder
+Convert the panel question into a message comparison study.
+Show the difference between conversation and structured research.
+5
+Study findings
+Review treatment fit, objections, and recommendation.
+Create a decision-ready outcome.
+6
+Activation brief
+Approve the audience-and-message plan with KPI and holdout.
+Connect intelligence to orchestration without building integration.
+7
+Learning loop
+Compare predicted and actual completion.
+Prove the closed loop.
+8
+Persona update
+Approve Taylor's proposed trait adjustment and open v1.1.
+Show governed learning and versioning.
+
+5. Screen-by-screen content states
+Screen
+State
+Visible components
+Illustrative content
+Home
+Default
+3 signal cards, 2 active studies, 1 completed learning event, quick actions
+Alert: comparison hesitation +9% vs prior baseline; 4 personas affected
+Persona explorer
+Filtered
+Journey = Evaluate; signal = hesitation
+Avery, Riley, Morgan, Taylor selected
+Journey detail
+Alert selected
+Moment trend, audience comparison, evidence drawer, proposed actions
+Completion 62%; effort score 3.4/5; confidence Medium
+Panel
+Synthesized
+Six individual responses plus moderator output
+Consensus: generic message lacks decision support; divergence: control vs guidance
+Study builder
+Review
+Decision, 6 personas, 2 messages, 5 measures
+Measures: clarity, relevance, confidence, continuation intent, concern
+Study findings
+Complete
+Recommendation, ranked outcomes, segment map, limitations
+Transparent comparison recommended as base; adaptive framing by persona
+Activation brief
+Approved
+Audience rules, variants, KPI, holdout, IDs
+Primary KPI: journey completion; 10% holdout; demo status Approved
+Learning loop
+Reconciled
+Prediction vs actual, variance, drivers, update proposal
+Predicted +8%; actual +6.7%; direction correct; Taylor actual above prediction
+Persona history
+v1.1
+Before/after trait and evidence event
+Evidence-backed personalization responsiveness 0.62 -> 0.68
+
+6. Study specification for the happy path
+Field
+Demo value
+Study name
+Plan comparison message test
+Decision
+Which message approach should be used at the comparison moment?
+Audience
+All six baseline personas; equal panel weighting
+Stimulus A
+More control: Customize the experience around what matters to you.
+Stimulus B
+Everything made simple: One clear plan and the support to move forward.
+Stimulus C
+Transparent comparison: See what you get, what it costs, and which option fits.
+Measures
+Clarity, relevance, confidence, continuation intent, primary concern
+Output
+Segment fit, drivers, objections, recommended treatment, validation needs
+Limitation
+Directional synthetic evidence; validate with live behavioral test and holdout
+
+7. Illustrative study outcomes
+Persona
+Preferred approach
+Continuation intent / 100
+Primary driver
+Primary concern
+Avery
+Control
+82
+Choice and speed
+Guidance could become friction
+Riley
+Simplicity
+78
+Confidence and support
+Unclear reversibility
+Morgan
+Transparent comparison
+85
+Visible total value
+Hidden tradeoffs
+Cameron
+Simplicity
+74
+Low effort and continuity
+Change to familiar process
+Taylor
+Transparent comparison
+80
+Evidence and autonomy
+Unsupported claims
+Quinn
+Simplicity
+88
+One clear next step
+Too many details at once
+
+8. Predicted vs. actual demo dataset
+Metric
+Baseline
+Predicted
+Actual
+Interpretation
+Journey completion
+62.0%
+67.0%
+66.2%
+Direction supported; effect slightly lower than predicted
+Comparison exits
+24.0%
+20.0%
+20.8%
+Improved, with remaining friction in mobile flow
+Support requests
+14.0%
+12.0%
+11.6%
+Guided content reduced reassurance contacts
+Taylor segment completion
+58.0%
+63.0%
+66.0%
+Evidence transparency outperformed persona prediction
+
+9. UI component inventory
+Global: product header, left navigation, breadcrumbs, role chip, search, notifications, reset.
+Intelligence: signal card, trend sparkline, confidence badge, evidence chip, freshness timestamp, observed/inferred/predicted label.
+Personas: persona card, comparison tray, trait bar, shift indicator, version selector, evidence drawer.
+Conversation: chat composer, prompt chip, stimulus attachment, response card, confidence/caveat footer, panel grid, moderator synthesis.
+Studies: stepper, persona selector, stimulus card, question builder, measure selector, review summary, processing state, findings tabs.
+Journeys: journey rail, moment node, health score, audience comparison, signal timeline, intervention card.
+Learning: linked-object timeline, predicted-vs-actual card, variance status, confounder list, update diff, approval panel, audit entry.
+10. Prototype logic
+Trigger
+Result
+Select journey alert
+Loads comparison-moment detail and highlights four affected personas.
+Ask prepared panel question
+Reveals six scripted responses, then moderator synthesis.
+Convert to study
+Prepopulates decision, personas, stimuli, and measures.
+Run study
+Shows staged progress, then the scripted findings state.
+Create activation
+Creates activation ACT-1047 linked to study ST-203.
+Mark campaign complete
+Loads actual outcomes and reconciliation event LE-0088.
+Approve persona update
+Creates Taylor v1.1 and records the approval in history.
+Reset demo
+Restores all IDs, statuses, and screens to initial state.
+
+11. Acceptance checklist
+☐ All six personas have coherent content across card, detail, chat, panel, study, and learning states.
+☐ The difference among observed, inferred, and predicted information is visible.
+☐ The panel shows individual voices before synthesis.
+☐ The study contains a decision, stimuli, method, measures, findings, limitations, and recommendation.
+☐ Journey, study, activation, and learning objects share persistent IDs.
+☐ Predicted and actual metrics reconcile mathematically and narratively.
+☐ The persona update changes only one dynamic trait and records why.
+☐ No client, bank, product-vendor, or regulated-industry language remains.
+☐ Every synthetic metric and persona is labeled illustrative or fictional in an appropriate location.
+☐ The demo can be reset and replayed without stale state.
+12. Build sequencing
+Create the data model and synthetic content first.
+Build the global shell and route structure.
+Implement persona catalog/detail and journey alert.
+Implement panel and scripted moderator synthesis.
+Implement study setup and findings.
+Implement activation brief and learning loop.
+Add governance cues, evidence drawers, versioning, and reset.
+Perform narrative QA using the happy-path script, then visual and accessibility QA.
+13. Scope change rule
+RULE A new screen or feature enters MVP only if it is required to complete the primary closed loop or removes a credibility gap in that loop. Otherwise add it to a post-demo backlog.
+
