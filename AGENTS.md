@@ -8,4 +8,5 @@
 - Keep quantitative calculations in deterministic analytics functions, not in persona-response generation.
 - Do not add client data, production endpoints, brand assets, live inference, or external write-back without explicit approval.
 - Preserve tenant, dataset, scenario, cohort, and version identifiers at future API boundaries; never mix client context or cached outputs.
-- Run the focused Node tests with `node --test tests/nespresso-data.test.js` after changing the synthetic analytics module.
+- Keep each client-specific page, data, styles, tests, and documentation under `clients/<client>/`; reuse generic shell assets through relative paths rather than copying them.
+- Run the focused ICC tests with `node --test clients/nespresso/tests/nespresso-data.test.js` after changing its synthetic analytics module.

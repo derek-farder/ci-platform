@@ -28,7 +28,7 @@ The brief supplies the cohort shares and planted scenario patterns: ignored desc
 
 The following numbers were added only to make the prototype calculable. They are not provided or validated by Nespresso:
 
-- Issue contact counts, preventability and retention-impact coefficients in `nespresso-data.js`.
+- Issue contact counts, preventability and retention-impact coefficients in [`../nespresso-data.js`](../nespresso-data.js).
 - Cohort monthly base issue rates and monthly capsule volumes.
 - Midpoint blockage multiplier `3.5×`, default nudge uptake `42%`, and effect size `32%`.
 - `1.08` contacts per prevented issue event; incremental lapse risk of `6%` per avoided contact; and six retained months of capsule volume per avoided lapse.
