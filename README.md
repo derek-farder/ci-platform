@@ -17,6 +17,6 @@ Open [http://localhost:4173](http://localhost:4173).
 
 The generic prototype covers overview, personas, conversations, studies, journeys, activation, and the learning loop. Actions use deterministic in-memory fixtures.
 
-The ICC demo presents five fabricated customer cohorts, baseline issue ranking, synthetic persona voice, a rule-based 12-month scenario, a provisional Feature Card, and two pillar previews. Its page, data, styles, tests, and documentation live together under `clients/nespresso/`.
+The ICC demo opens with three advisor paths and presents five synthetic cohorts, a rule-based 12-month scenario, a ranked feature backlog and one-year roadmap, calculated Subscription/Loyalty previews, a cross-cohort panel, and a first-party data bridge. Its page, data, styles, tests, and client documentation live under `clients/nespresso/`; the interim brand guide and logo-pending status are documented there.
 
 No API, live model, Nespresso data, external campaign action, or production integration is wired. The dataset module runs locally in the browser and Node; its 10,000-customer figure is a cohort-count basis, not 10,000 materialized customer records. See [the scenario assumptions](clients/nespresso/docs/scenario-assumptions.md) before presenting any output. See [clients/README.md](clients/README.md) for the client-pack structure.

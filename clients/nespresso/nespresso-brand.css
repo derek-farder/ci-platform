@@ -1,0 +1,112 @@
+/* Approved interim Nespresso demo tokens. See docs/brand-guide.md. */
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500&display=swap");
+
+.nespresso-shell {
+  --nx-black: #000000;
+  --nx-ink: #1a1a1a;
+  --nx-white: #ffffff;
+  --nx-cream: #f6f2ec;
+  --nx-sand: #e9e2d6;
+  --nx-muted: #6b6b6b;
+  --nx-gold: #987002;
+  --nx-gold-deep: #7a5a02;
+  --nx-gold-light: #c9a45c;
+  --nx-bronze: #796a57;
+  --nx-observed: #3e5c76;
+  --nx-simulated: #8a5a1c;
+  --nx-persona: #2f6b4f;
+  --nx-alert: #9c3d2e;
+  --nx-pillar-machine: #987002;
+  --nx-pillar-subscription: #3e5c76;
+  --nx-pillar-loyalty: #9c3d2e;
+  --nx-pillar-conversational: #5b4b8a;
+  --nx-pillar-farm: #2f6b4f;
+  --nx-radius: 2px;
+  --nx-tracking-label: .12em;
+  --nx-text-min: 11px;
+  --canvas: var(--nx-cream);
+  --paper: var(--nx-white);
+  --ink: var(--nx-ink);
+  --muted: var(--nx-muted);
+  --line: var(--nx-sand);
+  --line2: var(--nx-sand);
+  --side: var(--nx-black);
+  --green: var(--nx-persona);
+  --blue: var(--nx-observed);
+  --amber: var(--nx-simulated);
+  --coral: var(--nx-alert);
+  --display: "Jost", "DM Sans", sans-serif;
+}
+
+.nespresso-shell .sidebar { background: var(--nx-black); }
+.nespresso-shell .nav-item { color: var(--nx-sand); border-radius: 0; }
+.nespresso-shell .nav-item.active {
+  background: transparent;
+  color: var(--nx-white);
+  box-shadow: inset 2px 0 0 var(--nx-gold-light);
+}
+.nespresso-shell .icc-card,
+.nespresso-shell .feature-card,
+.nespresso-shell .preview-card { border-radius: var(--nx-radius); border-color: var(--nx-sand); box-shadow: none; }
+.nespresso-shell .icc-title { font: 400 32px/1.15 var(--display); }
+.nespresso-shell .icc-kicker { color: var(--nx-bronze); letter-spacing: var(--nx-tracking-label); font-size: 11px; }
+.nespresso-shell .icc-kicker i { background: var(--nx-gold); }
+.nespresso-shell .icc-stat-value,
+.nespresso-shell .simulation-metric strong,
+.nespresso-shell .priority-score strong { font-family: var(--display); font-weight: 400; }
+.nespresso-shell .button { border-radius: var(--nx-radius); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+.nespresso-shell .button.primary { background: var(--nx-black); border-color: var(--nx-black); color: var(--nx-white); }
+.nespresso-shell .button:not(.primary) { background: transparent; border-color: var(--nx-black); color: var(--nx-black); }
+.nespresso-shell .button:hover { box-shadow: inset 0 -2px 0 var(--nx-gold); }
+.nespresso-shell :focus-visible { outline: 2px solid var(--nx-gold); outline-offset: 2px; }
+
+.badge-observed, .badge-simulated, .badge-persona {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--nx-radius);
+  font: 500 11px var(--mono);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.badge-observed { color: var(--nx-observed); background: color-mix(in srgb, var(--nx-observed) 10%, white); }
+.badge-simulated { color: var(--nx-simulated); background: color-mix(in srgb, var(--nx-simulated) 10%, white); }
+.badge-persona { color: var(--nx-persona); background: color-mix(in srgb, var(--nx-persona) 10%, white); }
+.brand-logo-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 28px;
+  border: 1px dashed var(--nx-muted);
+  color: var(--nx-sand);
+  font: 500 11px var(--mono);
+  letter-spacing: .04em;
+}
+
+/* Client-facing type must remain readable in projected demos. */
+.nespresso-shell .icc-card-head p,
+.nespresso-shell .icc-subtitle,
+.nespresso-shell .icc-stat-label,
+.nespresso-shell .icc-stat-note,
+.nespresso-shell .answer-copy,
+.nespresso-shell .data-note,
+.nespresso-shell .cohort-card p,
+.nespresso-shell .cohort-profile span,
+.nespresso-shell .cohort-profile b,
+.nespresso-shell .voice-cite,
+.nespresso-shell .control label,
+.nespresso-shell .control output,
+.nespresso-shell .assumption span,
+.nespresso-shell .assumption b,
+.nespresso-shell .feature-field span,
+.nespresso-shell .feature-field b,
+.nespresso-shell .feature-field p,
+.nespresso-shell .icc-step,
+.nespresso-shell .question-chip,
+.nespresso-shell .cohort-row button,
+.nespresso-shell .cohort-row span,
+.nespresso-shell .pillars span,
+.nespresso-shell .preview-question,
+.nespresso-shell .preview-answer { font-size: max(11px, 1em); }

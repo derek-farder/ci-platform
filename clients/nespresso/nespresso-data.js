@@ -6,7 +6,7 @@
 })(typeof globalThis === "object" ? globalThis : this, function () {
   const dataset = {
     id: "nespresso-aotp-synthetic",
-    version: "0.1",
+    version: "0.2",
     generatedAt: "2026-10-07",
     customerCount: 10000,
     historyMonths: 24,
@@ -23,17 +23,19 @@
         quoteEvidence: ["Week-one pairing failure", "Early CRC chat contact"],
         baseIssueRateMonthly: 0.018,
         monthlyCapsules: 42,
+        subscriptionRate: 0.12,
       },
       {
         id: "overdue-descaler",
         name: "Overdue Descaler",
         share: 0.30,
-        profile: "Vertuo owner for 1–3 years; typically makes 2–3 cups daily.",
+        profile: "Vertuo owner for 1–3 years; typically makes about 2 cups daily.",
         signals: ["Descale alert ignored for 60+ days", "Flow-rate drop", "Blockage voice contact"],
         response: "I saw the orange light, but coffee was still coming out, so I left it for later. A short reminder showing what to do would be more useful than another warning.",
         quoteEvidence: ["Descale alert ignored for 60+ days", "Flow-rate drop before blockage contact"],
         baseIssueRateMonthly: 0.012,
         monthlyCapsules: 54,
+        subscriptionRate: 0.34,
       },
       {
         id: "connected-enthusiast",
@@ -45,6 +47,7 @@
         quoteEvidence: ["App-active", "Prior response to push notification"],
         baseIssueRateMonthly: 0.006,
         monthlyCapsules: 62,
+        subscriptionRate: 0.82,
       },
       {
         id: "silent-struggler",
@@ -56,6 +59,7 @@
         quoteEvidence: ["Low app use", "Unreported issue and capsule decline"],
         baseIssueRateMonthly: 0.010,
         monthlyCapsules: 35,
+        subscriptionRate: 0.08,
       },
       {
         id: "susie-serial-reactivator",
@@ -67,6 +71,7 @@
         quoteEvidence: ["Prior unresolved machine issue", "Returned after a 90+ day lapse"],
         baseIssueRateMonthly: 0.009,
         monthlyCapsules: 47,
+        subscriptionRate: 0.21,
       },
     ],
     issues: [
@@ -84,24 +89,68 @@
       weekOnePairingFailureAppNonConnection: 0.40,
       defaultNudgeUptake: 0.42,
       defaultNudgeEffect: 0.32,
+      defaultNudgeDelayDays: 75,
       projectionRangeFraction: 0.12,
       contactsPerPreventedIssue: 1.08,
       incrementalLapseRiskAfterUnresolvedContact: 0.06,
       retainedCapsulesMonths: 6,
+      illustrativeCapsulePriceEur: 0.65,
+      capsulePriceRangeEur: { low: 0.50, high: 0.85 },
+      resolvedContactLapseRate: 0.08,
     },
     knowledge: [
       { id: "SYN-KB-DESC-01", title: "When a machine needs descaling", source: "Demo-authored illustrative guidance", clientContent: false },
       { id: "SYN-KB-PAIR-01", title: "Check pairing before trying again", source: "Demo-authored illustrative guidance", clientContent: false },
       { id: "SYN-KB-FLOW-01", title: "What to note when flow changes", source: "Demo-authored illustrative guidance", clientContent: false },
     ],
-    featureCard: {
-      title: "A short, timed descaling guide",
-      problem: "Owners may defer a maintenance alert until flow changes or a blockage prompts a CRC contact.",
-      cohortId: "overdue-descaler",
-      productionDataNeeded: "Consent and channel eligibility; machine model and event telemetry; nudge exposure and completion; CRC reason and resolution; subscription and order outcomes.",
-      nessyFit: "High (provisional)",
-      priorityWeights: { impact: 0.4, feasibility: 0.3, strategicFit: 0.3 },
-      priorityInputs: { impact: 0.86, feasibility: 0.72, strategicFit: 0.8 },
+    priorityWeights: { impact: 0.4, feasibility: 0.3, strategicFit: 0.3 },
+    featureCards: [
+      {
+        id: "blockage-agent-assist",
+        title: "Blockage agent-assist for CRC voice",
+        problem: "Help CRC agents resolve high-handle-time blockage calls with grounded next steps.",
+        cohortId: "overdue-descaler",
+        nessyFit: "High",
+        effort: "Medium",
+        dataNeeded: ["CRC reason + AHT", "Resolution codes", "Approved troubleshooting content"],
+        productionDataNeeded: "CRC contact reason and resolution; AHT; machine model and event telemetry; approved knowledge sources.",
+        priorityInputs: { impact: 0.91, feasibility: 0.62, strategicFit: 0.85 },
+      },
+      {
+        id: "descale-guide",
+        title: "A short, timed descaling guide",
+        problem: "Owners may defer a maintenance alert until flow changes or a blockage prompts a CRC contact.",
+        cohortId: "overdue-descaler",
+        nessyFit: "High",
+        effort: "Medium",
+        dataNeeded: ["Descale events", "Nudge exposure + action", "CRC reasons"],
+        productionDataNeeded: "Consent and channel eligibility; machine model and event telemetry; nudge exposure and completion; CRC reason and resolution; subscription and order outcomes.",
+        priorityInputs: { impact: 0.86, feasibility: 0.72, strategicFit: 0.8 },
+      },
+      {
+        id: "pairing-assistant",
+        title: "Pairing assistant",
+        problem: "New connected owners can stall during app pairing and never reach a connected setup.",
+        cohortId: "setup-sam",
+        nessyFit: "High",
+        effort: "Medium",
+        dataNeeded: ["Pairing errors", "Device + app state", "Setup completion"],
+        productionDataNeeded: "Machine and app pairing events; model/firmware; consent and channel eligibility; support contact outcomes.",
+        priorityInputs: { impact: 0.78, feasibility: 0.82, strategicFit: 0.78 },
+      },
+      {
+        id: "silent-reengagement",
+        title: "Silent Struggler re-engagement",
+        problem: "Owners with unreported issues may quietly reduce capsule orders without entering a support journey.",
+        cohortId: "silent-struggler",
+        nessyFit: "Medium",
+        effort: "High",
+        dataNeeded: ["Registration status", "Order cadence", "Consent + eligibility"],
+        productionDataNeeded: "Registration and machine ownership; order cadence; consent, eligibility, and suppression rules; support history where available.",
+        priorityInputs: { impact: 0.70, feasibility: 0.68, strategicFit: 0.72 },
+      },
+    ],
+    featureCardNotes: {
       priorityNote: "Provisional score for discussion; Nessy Chapter 1 rubric and weights are not yet confirmed.",
     },
   };
@@ -112,6 +161,41 @@
 
   function summarizeCohorts() {
     return dataset.cohorts.map((cohort) => ({ ...cohort, count: cohortCount(cohort) }));
+  }
+
+  function subscriptionByCohort() {
+    return summarizeCohorts().map((cohort) => ({
+      cohortId: cohort.id,
+      cohortName: cohort.name,
+      subscriptionRate: cohort.subscriptionRate,
+      subscribedCount: Math.round(cohort.count * cohort.subscriptionRate),
+      cohortCount: cohort.count,
+    }));
+  }
+
+  function lapseComparison() {
+    const resolvedRate = dataset.rules.resolvedContactLapseRate;
+    return {
+      status: "synthetic-baseline",
+      resolvedRate,
+      unresolvedRate: resolvedRate * dataset.rules.unresolvedCrcLapseMultiplier,
+      multiplier: dataset.rules.unresolvedCrcLapseMultiplier,
+    };
+  }
+
+  function answerCohortPanel(question) {
+    return {
+      question,
+      answers: dataset.cohorts.map((cohort) => ({
+        cohortId: cohort.id,
+        cohortName: cohort.name,
+        kind: "illustrative persona voice",
+        text: cohort.response,
+        evidence: cohort.quoteEvidence,
+      })),
+      synthesis: "Across cohorts, people value clear next steps and useful support. They differ on how that help should arrive: some want a guided setup, some a timely nudge, and others low-effort service recovery. This is qualitative synthesis, not a measured preference ranking.",
+      limitation: "Five fictional cohort-grounded voices; no generated metrics or customer quotations.",
+    };
   }
 
   function answerPersonaQuestion(cohortId, question) {
@@ -147,7 +231,7 @@
       .sort((left, right) => right.priorityScore - left.priorityScore);
   }
 
-  function calculatePriorityScore(inputs = dataset.featureCard.priorityInputs, weights = dataset.featureCard.priorityWeights) {
+  function calculatePriorityScore(inputs = dataset.featureCards[0].priorityInputs, weights = dataset.priorityWeights) {
     const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
     if (Math.abs(totalWeight - 1) > 1e-9) throw new RangeError("Priority weights must sum to 1.");
     return Math.round(
@@ -155,13 +239,22 @@
     );
   }
 
+  function rankFeatureCards() {
+    return dataset.featureCards.map((feature) => ({
+      ...feature,
+      cohort: dataset.cohorts.find((cohort) => cohort.id === feature.cohortId),
+      priorityScore: calculatePriorityScore(feature.priorityInputs, dataset.priorityWeights),
+    })).sort((left, right) => right.priorityScore - left.priorityScore);
+  }
+
   function simulateDescaleNudge(options = {}) {
     const uptake = options.uptake ?? dataset.rules.defaultNudgeUptake;
     const effect = options.effect ?? dataset.rules.defaultNudgeEffect;
     const horizonMonths = options.horizonMonths ?? 12;
-    const nudgeStartDay = options.nudgeStartDay ?? 75;
-    const startMonth = Math.ceil(nudgeStartDay / 30);
+    const nudgeDelayDays = options.nudgeDelayDays ?? dataset.rules.defaultNudgeDelayDays;
+    const startMonth = Math.max(1, Math.ceil(nudgeDelayDays / 30));
     const uncertainty = options.uncertainty ?? dataset.rules.projectionRangeFraction;
+    const scaleToCustomers = options.scaleToCustomers ?? null;
     const cohort = dataset.cohorts.find((item) => item.id === "overdue-descaler");
 
     if (![uptake, effect, uncertainty].every((value) => Number.isFinite(value) && value >= 0 && value <= 1)) {
@@ -170,29 +263,49 @@
     if (!Number.isInteger(horizonMonths) || horizonMonths < 1 || horizonMonths > 36) {
       throw new RangeError("Horizon must be an integer from 1 to 36 months.");
     }
-    if (!Number.isInteger(nudgeStartDay) || nudgeStartDay < 1 || nudgeStartDay > horizonMonths * 30) {
-      throw new RangeError("Nudge start day must fall inside the simulation horizon.");
+    if (!Number.isInteger(nudgeDelayDays) || nudgeDelayDays < 0 || nudgeDelayDays > horizonMonths * 30) {
+      throw new RangeError("Nudge delay must fall inside the simulation horizon.");
     }
+    const cohortSize = cohortCount(cohort);
+    if (scaleToCustomers !== null && (!Number.isFinite(scaleToCustomers) || scaleToCustomers < cohortSize)) {
+      throw new RangeError("Scale target must be at least the cohort size.");
+    }
+    const referenceStartMonth = Math.max(1, Math.ceil(dataset.rules.defaultNudgeDelayDays / 30));
+    const referenceActiveMonths = horizonMonths - referenceStartMonth + 1;
+    const activeMonths = nudgeDelayDays >= horizonMonths * 30
+      ? 0
+      : Math.max(0, Math.min(horizonMonths, referenceActiveMonths - (nudgeDelayDays - dataset.rules.defaultNudgeDelayDays) / 30));
+    const firstMonthWeight = Math.max(0, Math.min(1, activeMonths - (horizonMonths - startMonth)));
 
-    const customers = cohortCount(cohort);
+    const customers = scaleToCustomers ?? cohortSize;
+    const scaleFactor = customers / cohortSize;
     const riskMultiplier = dataset.rules.blockageRiskMultiplier;
     const monthlyIssueRisk = cohort.baseIssueRateMonthly * riskMultiplier;
     const monthly = Array.from({ length: horizonMonths }, (_, index) => {
       const month = index + 1;
       const baselineEvents = customers * monthlyIssueRisk;
-      const nudgeActive = month >= startMonth;
-      const preventedEvents = nudgeActive ? baselineEvents * uptake * effect : 0;
-      return { month, nudgeActive, baselineEvents, preventedEvents };
+      const monthWeight = month < startMonth ? 0 : month === startMonth ? firstMonthWeight : 1;
+      const nudgeActive = monthWeight > 0;
+      const preventedEvents = baselineEvents * uptake * effect * monthWeight;
+      const baselineContacts = baselineEvents * dataset.rules.contactsPerPreventedIssue;
+      const withNudgeContacts = (baselineEvents - preventedEvents) * dataset.rules.contactsPerPreventedIssue;
+      return { month, nudgeActive, baselineEvents, preventedEvents, baselineContacts, withNudgeContacts };
     });
     const preventedEvents = monthly.reduce((sum, step) => sum + step.preventedEvents, 0);
     const preventedContacts = preventedEvents * dataset.rules.contactsPerPreventedIssue;
+    const baselineContacts = monthly.reduce((sum, step) => sum + step.baselineContacts, 0);
+    const pctBlockageContactsAvoided = baselineContacts ? (preventedContacts / baselineContacts) * 100 : 0;
     const lapsesAvoided = preventedContacts * dataset.rules.incrementalLapseRiskAfterUnresolvedContact;
     const lapseDeltaPercentagePoints = (lapsesAvoided / customers) * 100;
     const capsuleVolumeProtected = lapsesAvoided * cohort.monthlyCapsules * dataset.rules.retainedCapsulesMonths;
+    const capsuleRevenueProtectedEur = capsuleVolumeProtected * dataset.rules.illustrativeCapsulePriceEur;
     const midpoint = {
       crcContactsAvoided: Math.round(preventedContacts),
+      baselineBlockageContacts: Math.round(baselineContacts),
+      pctBlockageContactsAvoided: Number(pctBlockageContactsAvoided.toFixed(2)),
       lapseRateDeltaPercentagePoints: Number(lapseDeltaPercentagePoints.toFixed(2)),
       capsuleVolumeProtected: Math.round(capsuleVolumeProtected),
+      capsuleRevenueProtectedEur: Math.round(capsuleRevenueProtectedEur),
     };
 
     function range(value) {
@@ -208,13 +321,13 @@
       datasetVersion: dataset.version,
       cohortId: cohort.id,
       horizonMonths,
-      nudgeStartDay,
+      nudgeDelayDays,
       nudgeStartMonth: startMonth,
       monthly: monthly.map((step) => ({
         month: step.month,
         nudgeActive: step.nudgeActive,
-        baselineIssueEvents: Number(step.baselineEvents.toFixed(1)),
-        avoidedIssueEvents: Number(step.preventedEvents.toFixed(1)),
+        baselineContacts: Number(step.baselineContacts.toFixed(1)),
+        withNudgeContacts: Number(step.withNudgeContacts.toFixed(1)),
       })),
       midpoint,
       ranges: {
@@ -224,12 +337,22 @@
           high: Number((midpoint.lapseRateDeltaPercentagePoints * (1 + uncertainty)).toFixed(2)),
         },
         capsuleVolumeProtected: range(midpoint.capsuleVolumeProtected),
+        capsuleRevenueProtectedEur: {
+          low: Math.round(capsuleVolumeProtected * (1 - uncertainty) * dataset.rules.capsulePriceRangeEur.low),
+          high: Math.round(capsuleVolumeProtected * (1 + uncertainty) * dataset.rules.capsulePriceRangeEur.high),
+        },
+        pctBlockageContactsAvoided: {
+          low: Number((pctBlockageContactsAvoided * (1 - uncertainty)).toFixed(2)),
+          high: Number((pctBlockageContactsAvoided * (1 + uncertainty)).toFixed(2)),
+        },
       },
       assumptions: {
         cohortCustomers: customers,
+        sourceCohortCustomers: cohortSize,
+        scaleFactor,
         monthlyBaseIssueRisk: cohort.baseIssueRateMonthly,
         ignoredDescaleAlertDays: dataset.rules.ignoredDescaleAlertDays,
-        nudgeStartDay,
+        nudgeDelayDays,
         blockageRiskMultiplier: riskMultiplier,
         monthlyIssueRiskAfterMultiplier: Number(monthlyIssueRisk.toFixed(4)),
         uptake,
@@ -238,9 +361,12 @@
         incrementalLapseRiskAfterUnresolvedContact: dataset.rules.incrementalLapseRiskAfterUnresolvedContact,
         monthlyCapsules: cohort.monthlyCapsules,
         retainedCapsulesMonths: dataset.rules.retainedCapsulesMonths,
+        illustrativeCapsulePriceEur: dataset.rules.illustrativeCapsulePriceEur,
+        capsulePriceRangeEur: dataset.rules.capsulePriceRangeEur,
+        annualCapsuleSpendSanityCheckEur: Number((cohort.monthlyCapsules * 12 * dataset.rules.illustrativeCapsulePriceEur).toFixed(2)),
         uncertaintyFraction: uncertainty,
       },
-      limitation: "Illustrative cohort-level scenario. Planted synthetic relationships are not causal evidence or a forecast of Nespresso outcomes.",
+      limitation: "Illustrative cohort-level scenario. Synthetic scenario assumptions are not causal evidence or a forecast of client outcomes.",
     };
   }
 
@@ -248,9 +374,13 @@
     dataset,
     cohortCount,
     summarizeCohorts,
+    subscriptionByCohort,
+    lapseComparison,
+    answerCohortPanel,
     answerPersonaQuestion,
     rankIssues,
     calculatePriorityScore,
+    rankFeatureCards,
     simulateDescaleNudge,
   };
 });
