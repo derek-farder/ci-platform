@@ -1,6 +1,6 @@
 # ICC Synthetic Scenario Assumptions
 
-Version `0.2` · Internal concept · Dataset ID `nespresso-aotp-synthetic`
+Version `0.3` · Internal concept · Dataset ID `nespresso-aotp-synthetic`
 
 ## Scope and provenance
 
@@ -22,6 +22,20 @@ The market codes in the fixture (CH, FR, US) are examples from the brief, not a 
 
 Shares are fabricated scenario inputs from the brief, not measured audience proportions. Counts are derived by multiplying these shares by 10,000.
 
+## Concept-study engagement inputs
+
+The following attributes were supplied in the v0.3 demo brief and remain provisional until calibrated against first-party data:
+
+| Cohort | App reach | Email reach | Notice | Base act | Clarity lift | Incentive lift |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Overdue Descaler | 0.55 | 0.70 | 0.65 | 0.30 | 0.50 | 0.40 |
+| Setup Sam | 0.45 | 0.80 | 0.75 | 0.40 | 0.60 | 0.20 |
+| Connected Enthusiast | 0.90 | 0.75 | 0.85 | 0.55 | 0.20 | 0.20 |
+| Silent Struggler | 0.10 | 0.25 | 0.40 | 0.20 | 0.30 | 0.50 |
+| Susie Serial Reactivator | 0.40 | 0.60 | 0.60 | 0.30 | 0.30 | 0.60 |
+
+Concept variants are provisional: A · Reminder (App push, no tutorial/incentive, 0.20 effect if acted); B · Guided (App push, 2-minute tutorial, no incentive, 0.32 effect); C · Guided + kit (App push + email, tutorial, descaling kit offer with next capsule order, 0.45 effect). Stance cutoffs are Likely ≥0.30, Maybe ≥0.15, and Unlikely below 0.15; these are demo conventions, not calibrated behavioral thresholds.
+
 Provisional subscription shares, added to power the chart preview: Setup Sam 12%, Overdue Descaler 34%, Connected Enthusiast 82%, Silent Struggler 8%, and Susie Serial Reactivator 21%. These were not supplied by Nespresso and must be replaced or removed when first-party data is available.
 
 ## Source facts and added fixture inputs
@@ -39,6 +53,7 @@ The following numbers were added only to make the prototype calculable. They are
 - Resolved-contact lapse rate of 8%; the unresolved-contact scenario applies the brief's 2× multiplier to produce 16%. These are illustrative chart values.
 - Capsule price midpoint `€0.65`, with a price sensitivity range of `€0.50–€0.85`, sourced from the attached user-provided note: “Blended Vertuo retail list price per capsule, France 2026, midpoint across Espresso (~€0.44–0.55) through Mug (~€0.69–0.95) sizes, per third-party price guides (graindexpert.fr, May 2026). US retail is roughly $1.10–1.50 per capsule. Not Nespresso net revenue: excludes subscription and volume discounts and market mix. Replace with Nespresso's actual average selling price when available.” This source/price note is not an official Nespresso price list and is not market-specific analysis for this demo.
 - The Overdue Descaler profile says “about 2 cups daily” to align with the existing 54 capsules/month input. At €0.65 this yields `54 × 12 × €0.65 = €421.20` illustrative retail value per customer-year. This is a sanity check, not revenue recognized by Nespresso.
+- Variant C's descaling kit cost is provisionally `€12` per acted offer. Net illustrative value equals gross protected capsule retail value minus expected kit cost for acted customers. It excludes product margin, fulfilment, taxes, subscriptions, and discounts; negative net is shown honestly.
 - Feature-card priority scores and effort/data-needed labels for four demo backlog items, using the shared provisional weights below.
 - AWS source-system names and statuses in the “Your data” bridge. These are examples for discussion, not confirmed integrations.
 - Provisional Feature Card scoring weights of 40% impact, 30% feasibility, and 30% strategic fit, plus input scores. The Nessy Chapter 1 fit and rubric require client validation.
@@ -64,6 +79,9 @@ Monthly contact lines are calculated from the same baseline events and contact m
 - Four Feature Cards use impact / feasibility / strategic-fit inputs and weights of 40% / 30% / 30%. The v0.2 demo inputs are: blockage agent assist `0.91/0.62/0.85`; descaling guide `0.86/0.72/0.80`; pairing assistant `0.78/0.82/0.78`; Silent Struggler re-engagement `0.70/0.68/0.72`. Scores are rounded to integers and are provisional, not a validated Nessy prioritization model.
 - Quarterly roadmap lanes and placements are illustrative sequencing, not approved commitments or estimates.
 - The data bridge source system labels and “Needed / Available?” statuses are unconfirmed examples.
+- Concept uptake is deterministic: app-only `reach = appReach`; app + email `reach = 1 − (1 − appReach)(1 − emailReach)`; `act = min(0.95, baseAct × (1 + clarityLift × tutorial) × (1 + incentiveLift × incentive))`; `expectedUptake = reach × notice × act`. Main barrier is the largest loss across reach, notice, and act. Persona text is scripted by cohort/stance/barrier and cannot supply numbers.
+- The study's computed uptake/effect pass unchanged into the 12-month impact calculation. The C kit-cost estimate uses the same study-derived expected acted count.
+- No live LLM is used. A production researcher agent and synthesizer agent (for example, Bedrock/AgentCore in the client AWS sandbox) could generate grounded reactions and synthesis; deterministic analytics must remain the source of numeric outputs.
 
 ## Display language
 

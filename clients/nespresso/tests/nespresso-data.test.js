@@ -106,3 +106,64 @@ test("pillar visuals are calculated from synthetic cohort assumptions", () => {
   assert.equal(lapse.unresolvedRate, lapse.resolvedRate * 2);
   assert.equal(demo.answerCohortPanel("What would make support easier?").answers.length, 5);
 });
+
+test("concept study computes stance, funnel, and target outcomes for all 15 cohort-variant pairs", () => {
+  const expectedTarget = {
+    A: { uptake: 0.10725, stance: "Unlikely", avoidedPct: 1.79, effect: 0.20 },
+    B: { uptake: 0.160875, stance: "Maybe", avoidedPct: 4.29, effect: 0.32 },
+    C: { uptake: 0.3542175, stance: "Likely", avoidedPct: 13.28, effect: 0.45 },
+  };
+
+  for (const variant of demo.dataset.conceptVariants) {
+    const study = demo.runConceptStudy({ variantId: variant.id });
+    const expected = expectedTarget[variant.id];
+    const target = study.reactions.find((reaction) => reaction.cohortId === "overdue-descaler");
+    const silent = study.reactions.find((reaction) => reaction.cohortId === "silent-struggler");
+    const enthusiast = study.reactions.find((reaction) => reaction.cohortId === "connected-enthusiast");
+
+    assert.equal(study.reactions.length, 5);
+    assert.equal(study.variantComparison.length, 3);
+    assert.ok(Math.abs(study.targetUptake - expected.uptake) < 1e-10);
+    assert.equal(target.stance, expected.stance);
+    assert.equal(study.targetEffect, expected.effect);
+    assert.equal(study.variantComparison.find((item) => item.id === variant.id).pctContactsAvoided, expected.avoidedPct);
+    assert.ok(target.funnel.reach >= target.expectedUptake);
+    assert.ok(target.funnel.notice >= target.funnel.act);
+    assert.equal(silent.stance, "Unlikely");
+    assert.ok(silent.expectedUptake <= 0.051);
+    assert.equal(enthusiast.stance, "Likely");
+    assert.equal(target.why, demo.dataset.cohorts.find((cohort) => cohort.id === target.cohortId).engagementVoice[target.stance.toLowerCase()]);
+    assert.doesNotMatch(target.why, /\d/);
+  }
+});
+
+test("the selected study's numeric uptake and effect flow directly into impact", () => {
+  const study = demo.runConceptStudy({ variantId: "B" });
+  const impact = demo.simulateDescaleNudge({ uptake: study.targetUptake, effect: study.targetEffect, nudgeDelayDays: study.delayDays });
+  const comparison = study.variantComparison.find((variant) => variant.id === "B");
+
+  assert.equal(impact.midpoint.pctBlockageContactsAvoided, comparison.pctContactsAvoided);
+  assert.equal(impact.midpoint.pctBlockageContactsAvoided, 4.29);
+});
+
+test("impact inputs default to study results and can be reset after an override", () => {
+  const study = demo.runConceptStudy({ variantId: "B" });
+  const fromStudy = demo.resolveConceptImpactInputs(study);
+  const overridden = demo.resolveConceptImpactInputs(study, { uptake: 0.5, effect: 0.4 });
+  const reset = demo.resolveConceptImpactInputs(study, null);
+
+  assert.deepEqual(fromStudy, { uptake: study.targetUptake, effect: study.targetEffect, overridden: false });
+  assert.deepEqual(overridden, { uptake: 0.5, effect: 0.4, overridden: true });
+  assert.deepEqual(reset, fromStudy);
+  assert.throws(() => demo.resolveConceptImpactInputs(study, { uptake: 1.2, effect: 0.4 }), RangeError);
+});
+
+test("incentive economics report gross and net euro values", () => {
+  const study = demo.runConceptStudy({ variantId: "C" });
+  const economics = demo.calculateConceptEconomics({ variantId: "C", uptake: study.targetUptake, effect: study.targetEffect });
+
+  assert.equal(economics.grossRevenueProtectedEur, demo.simulateDescaleNudge({ uptake: study.targetUptake, effect: study.targetEffect }).midpoint.capsuleRevenueProtectedEur);
+  assert.equal(economics.kitCostEur, Math.round(study.targetUptake * 3000 * demo.dataset.rules.descalingKitCostEur));
+  assert.equal(economics.netRevenueProtectedEur, Math.round(economics.grossRevenueProtectedEur - study.targetUptake * 3000 * demo.dataset.rules.descalingKitCostEur));
+  assert.ok(economics.netRevenueProtectedEur < 0);
+});

@@ -12,6 +12,14 @@ const initialState = {
   effect: 32,
   delayDays: 75,
   scaleToCustomers: 3000,
+  studyStage: "concept",
+  variantId: "B",
+  revealedCohorts: 0,
+  studyRunning: false,
+  overrideUptake: null,
+  overrideEffect: null,
+  overridden: false,
+  overridesOpen: false,
   backlogItems: [],
   panelQuestion: "What would make support easier?",
 };
@@ -19,6 +27,7 @@ const state = { ...initialState, backlogItems: [] };
 const app = document.querySelector("#icc-app");
 const pages = { doors: "Choose a decision", ask: "Ask", cohort: "Cohorts", simulation: "What-if", backlog: "Ranked backlog", zoom: "Zoom out", data: "Your data" };
 let toastTimer;
+let studyRunToken = 0;
 
 function icon(name) { return `<i data-lucide="${name}" aria-hidden="true"></i>`; }
 function escapeHTML(value) { return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]); }
@@ -40,6 +49,10 @@ function actionButton(label, action, primary = false, symbol = "") {
 function getCohort(id = state.cohort) { return demo.dataset.cohorts.find((cohort) => cohort.id === id); }
 function setView(view) {
   if (!pages[view]) return;
+  if (state.studyRunning && (view !== "simulation" || view !== state.view)) {
+    studyRunToken += 1;
+    state.studyRunning = false;
+  }
   state.view = view;
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -54,6 +67,24 @@ function toast(message) {
   node.classList.add("visible");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => node.classList.remove("visible"), 2400);
+}
+function startStudyReveal() {
+  studyRunToken += 1;
+  const token = studyRunToken;
+  state.studyStage = "panel";
+  state.studyRunning = true;
+  state.revealedCohorts = 0;
+  setView("simulation");
+
+  function revealNext() {
+    if (token !== studyRunToken || !state.studyRunning) return;
+    state.revealedCohorts += 1;
+    if (state.revealedCohorts >= demo.dataset.cohorts.length) state.studyRunning = false;
+    render();
+    if (state.studyRunning) window.setTimeout(revealNext, 1000);
+  }
+
+  window.setTimeout(revealNext, 1000);
 }
 function miniBar(value, max, colorClass = "") {
   return `<span class="mini-bar ${colorClass}"><i style="width:${max ? Math.max(2, value / max * 100) : 0}%"></i></span>`;
@@ -126,7 +157,7 @@ function lineChart(monthly) {
   const gap = [...monthly.map((item, i) => `${x(i)},${y(item.baselineContacts)}`), ...monthly.map((item, i) => `${x(monthly.length - 1 - i)},${y(monthly[monthly.length - 1 - i].withNudgeContacts)}`)].join(" ");
   return `<svg class="contact-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Monthly baseline contacts compared with simulated contacts after the nudge"><polygon points="${gap}" class="chart-gap"/><polyline points="${baseline}" class="chart-baseline"/><polyline points="${withNudge}" class="chart-intervention"/>${monthly.map((item, i) => i % 2 === 0 ? `<text x="${x(i)}" y="${height - 2}">M${item.month}</text>` : "").join("")}</svg>`;
 }
-function simulationPage() {
+function simulationPageLegacy() {
   const result = demo.simulateDescaleNudge({ uptake: state.uptake / 100, effect: state.effect / 100, nudgeDelayDays: state.delayDays, scaleToCustomers: state.scaleToCustomers });
   const cohortSize = 3000;
   const scaleLabel = state.scaleToCustomers === cohortSize ? `This cohort (${number(cohortSize)})` : `Per ${number(state.scaleToCustomers)} Overdue Descalers`;
@@ -154,6 +185,62 @@ function updateSimulationPreview(form) {
   state.uptake = uptake;
   state.effect = effect;
   state.scaleToCustomers = scaleToCustomers;
+}
+
+function studySteps() {
+  const steps = ["Concept", "Panel", "Synthesis", "Impact"];
+  const activeIndex = steps.findIndex((step) => step.toLowerCase() === state.studyStage);
+  return `<div class="study-steps">${steps.map((step, index) => `<div class="study-step ${index === activeIndex ? "active" : ""} ${index < activeIndex ? "done" : ""}"><i>${index < activeIndex ? icon("check") : index + 1}</i><span>${step}</span></div>`).join("")}</div>`;
+}
+
+function conceptCard(variant) {
+  return `<button class="concept-card ${state.variantId === variant.id ? "selected" : ""}" data-concept-variant="${variant.id}"><div class="concept-card-top"><span>VARIANT ${variant.id}</span>${state.variantId === variant.id ? `<span class="concept-selected">SELECTED</span>` : ""}</div><h2>${variant.name}</h2><dl><div><dt>Channel</dt><dd>${variant.channel}</dd></div><div><dt>Tutorial</dt><dd>${variant.tutorial ? "2-minute descaling tutorial" : "None"}</dd></div><div><dt>Incentive</dt><dd>${variant.incentive ? variant.incentiveDescription : "None"}</dd></div><div><dt>Effect if acted</dt><dd>${Math.round(variant.effectIfActed * 100)}%</dd></div></dl></button>`;
+}
+
+function conceptStage() {
+  const variant = demo.dataset.conceptVariants.find((item) => item.id === state.variantId);
+  return `${shellHead("MOMENT 3 · CONCEPT", "Test the idea with the panel before building it.", "Choose a concept to inspect. The study runs all three variants across the five synthetic cohorts.")}${pillarSwitcher()}${studySteps()}<section class="icc-card">${cardHead("Concept variants", "Select one to preview; all three enter the panel study.", answerBadge("simulated", "Study setup"))}<div class="concept-grid">${demo.dataset.conceptVariants.map(conceptCard).join("")}</div><div class="concept-delay"><label for="concept-delay">Nudge sent N days after an ignored descale alert <output>${state.delayDays} days</output></label><input id="concept-delay" type="range" min="0" max="180" step="1" value="${state.delayDays}"/><p>The delay is relative to the ignored alert, not the simulation calendar.</p></div><div class="concept-summary"><b>Selected: Variant ${variant.id} · ${variant.name}</b><span>${variant.channel} · ${variant.tutorial ? "2-minute tutorial" : "no tutorial"} · effect if acted ${Math.round(variant.effectIfActed * 100)}%</span></div><div class="flow-next"><button class="button primary" data-study-action="run">Run study on all variants ${icon("arrow-right")}</button></div></section>`;
+}
+
+function reactionCard(reaction) {
+  const cohort = demo.dataset.cohorts.find((item) => item.id === reaction.cohortId);
+  const stageValues = [reaction.funnel.reach, reaction.funnel.notice, reaction.funnel.act];
+  const labels = ["Reach", "Notice", "Act"];
+  return `<article class="reaction-card"><div class="reaction-head"><div><span class="reaction-avatar ${cohort.id}">${cohort.name.slice(0, 1)}</span><b>${cohort.name}</b></div><span class="stance stance-${reaction.stance.toLowerCase()}">${reaction.stance}</span></div><blockquote>${reaction.why}</blockquote><div class="reaction-meta"><span><b>Main barrier</b>${reaction.mainBarrier}</span><span><b>What could change my mind</b>${reaction.whatWouldChangeMyMind}</span></div><div class="reaction-uptake"><strong>${Math.round(reaction.expectedUptake * 100)}%</strong><span>expected uptake</span></div><div class="funnel">${stageValues.map((value, index) => `<div><span>${labels[index]}</span><i><b style="width:${Math.round(value * 100)}%"></b></i><strong>${Math.round(value * 100)}%</strong></div>`).join("")}</div></article>`;
+}
+
+function panelStage() {
+  const study = demo.runConceptStudy({ variantId: state.variantId, delayDays: state.delayDays });
+  const visibleReactions = study.reactions.slice(0, state.revealedCohorts);
+  const variantOptions = demo.dataset.conceptVariants.map((variant) => `<button class="variant-switch ${variant.id === state.variantId ? "active" : ""}" data-concept-variant="${variant.id}">Variant ${variant.id} · ${variant.name}</button>`).join("");
+  return `${shellHead("MOMENT 3 · PANEL", "What would each cohort do?", "Expected uptake is calculated from reach × notice × act. Persona voice explains the computed stance; it never supplies numbers.")}${studySteps()}<section class="icc-card">${cardHead("Panel reactions", `Variant ${state.variantId} · ${demo.dataset.conceptVariants.find((variant) => variant.id === state.variantId).name}`, answerBadge("persona", "Persona · illustrative"))}<div class="variant-switcher">${variantOptions}</div>${state.studyRunning ? `<div class="study-progress"><span class="progress-spinner"></span><span>Running synthetic panel · ${state.revealedCohorts} of 5 cohorts</span><button class="text-link" data-study-action="skip">Skip reveal</button></div>` : ""}<div class="reaction-grid">${visibleReactions.map(reactionCard).join("")}</div>${!state.studyRunning && state.revealedCohorts < 5 ? `<div class="flow-next"><button class="button primary" data-study-action="run">Run study ${icon("play")}</button></div>` : ""}${!state.studyRunning && state.revealedCohorts === 5 ? `<div class="flow-next"><button class="button primary" data-study-action="synthesis">View synthesis ${icon("arrow-right")}</button></div>` : ""}</section>`;
+}
+
+function synthesisStage() {
+  const study = demo.runConceptStudy({ variantId: state.variantId, delayDays: state.delayDays });
+  const recommended = study.variantComparison.find((item) => item.id === study.recommendedVariantId);
+  const maxPct = Math.max(...study.variantComparison.map((item) => item.pctContactsAvoided));
+  return `${shellHead("MOMENT 3 · SYNTHESIS", "What might work, and who could it miss?", "Expected engagement comes from the deterministic funnel. Validate the scenario with a controlled pilot.")}${studySteps()}<div class="synthesis-layout"><section class="icc-card recommendation-card">${cardHead("Recommended variant", "Highest expected avoided contacts for Overdue Descaler", answerBadge("simulated", "Simulated"))}<div class="recommendation-main"><span class="recommendation-variant">${recommended.id}</span><div><h2>Variant ${recommended.id} · ${recommended.variantName}</h2><p>${demo.dataset.conceptVariants.find((item) => item.id === recommended.id).channel}</p></div></div><div class="comparison-chart">${study.variantComparison.map((variant) => `<div class="comparison-row"><span>Variant ${variant.id} · ${variant.variantName}</span><i><b class="${variant.id === recommended.id ? "recommended" : ""}" style="width:${maxPct ? variant.pctContactsAvoided / maxPct * 100 : 0}%"></b></i><strong>${variant.pctContactsAvoided.toFixed(2)}%</strong></div>`).join("")}</div><p class="comparison-caption">Overdue Descaler blockage contacts avoided in 12 months.</p><button class="button primary" data-study-action="choose-recommended">Use recommended variant ${icon("arrow-right")}</button></section><section class="icc-card">${cardHead("Panel readout", "What the cohort reactions suggest") }<div class="readout-block"><b>Works for</b><p>${study.whoItWorksFor.join(" · ") || "No cohort is likely to act under this variant."}</p></div><div class="readout-block"><b>May miss</b><p>${study.whoItMayMiss.join(" · ") || "No cohort is currently classified as unlikely."}</p></div><div class="readout-block"><b>Top barriers</b><ol>${study.topBarriers.map((barrier) => `<li>${barrier}</li>`).join("")}</ol></div><div class="readout-block"><b>Pilot validation</b><p>Holdout: ${study.pilotValidation.holdoutSize}<br/>Primary KPI: ${study.pilotValidation.primaryKpi}</p></div></section></div><p class="study-caveat">Synthetic panel: a reasoned starting expectation to validate in a pilot, not a measured result.</p>`;
+}
+
+function impactStage() {
+  const study = demo.runConceptStudy({ variantId: state.variantId, delayDays: state.delayDays });
+  const override = state.overridden ? { uptake: state.overrideUptake, effect: state.overrideEffect } : null;
+  const impactInputs = demo.resolveConceptImpactInputs(study, override);
+  const uptake = impactInputs.uptake;
+  const effect = impactInputs.effect;
+  const result = demo.simulateDescaleNudge({ uptake, effect, nudgeDelayDays: state.delayDays, scaleToCustomers: state.scaleToCustomers });
+  const economics = demo.calculateConceptEconomics({ variantId: state.variantId, uptake, effect, delayDays: state.delayDays, scaleToCustomers: state.scaleToCustomers });
+  const cohortSize = demo.cohortCount(demo.dataset.cohorts.find((cohort) => cohort.id === "overdue-descaler"));
+  const scaleLabel = state.scaleToCustomers === cohortSize ? `This cohort (${number(cohortSize)})` : `Per ${number(state.scaleToCustomers)} Overdue Descalers`;
+  return `${shellHead("MOMENT 3 · IMPACT", "What could the study imply over 12 months?", `${scaleLabel} · From study: uptake ${Math.round(study.targetUptake * 100)}%, effect ${Math.round(study.targetEffect * 100)}%${state.overridden ? " · assumptions overridden" : ""}`)}${studySteps()}<div class="simulation-layout"><div><section class="icc-card">${cardHead(`Variant ${state.variantId} · ${study.selectedVariant.name}`, `${study.selectedVariant.channel} · ${study.selectedVariant.tutorial ? "2-minute tutorial" : "no tutorial"}`, answerBadge("simulated", "From study"))}<div class="hero-outcome"><div><span>% OF THIS COHORT’S BLOCKAGE CONTACTS AVOIDED OVER 12 MONTHS</span><strong>${result.midpoint.pctBlockageContactsAvoided.toFixed(2)}%</strong><small>${number(result.midpoint.crcContactsAvoided)} of about ${number(result.midpoint.baselineBlockageContacts)} contacts</small></div><div class="hero-range">Sensitivity range<br/><b>${result.ranges.pctBlockageContactsAvoided.low.toFixed(2)}–${result.ranges.pctBlockageContactsAvoided.high.toFixed(2)}%</b></div></div><div class="revenue-grid"><div class="revenue-outcome"><span>Gross capsule revenue protected</span><strong>${euro(economics.grossRevenueProtectedEur)}</strong></div><div class="revenue-outcome"><span>Net after kit cost</span><strong class="${economics.netRevenueProtectedEur < 0 ? "net-negative" : ""}">${euro(economics.netRevenueProtectedEur)}</strong><small>Kit cost ${euro(economics.kitCostEur)} · ${number(economics.actedCustomers)} expected kit offers acted</small></div></div><div class="chart-legend"><span><i class="legend-baseline"></i>Baseline monthly contacts</span><span><i class="legend-intervention"></i>With concept</span></div>${lineChart(result.monthly)}<p class="study-caveat">Illustrative simulation, not a forecast; the range is scenario sensitivity, not a statistical confidence interval.</p></section></div><aside><section class="icc-card">${cardHead("Study-derived assumptions", state.overridden ? "Overridden · impact now uses manual inputs" : `From study: uptake ${Math.round(study.targetUptake * 100)}%, effect ${Math.round(study.targetEffect * 100)}%`, answerBadge("simulated", state.overridden ? "Overridden" : "From study"))}<details class="override-details" ${state.overridesOpen ? "open" : ""}><summary>Override assumptions</summary><form data-override-form><div class="control"><label for="override-uptake"><span>Expected uptake</span><output>${Math.round(uptake * 100)}%</output></label><input id="override-uptake" name="uptake" type="range" min="0" max="100" value="${Math.round(uptake * 100)}"/></div><div class="control"><label for="override-effect"><span>Effect if acted</span><output>${Math.round(effect * 100)}%</output></label><input id="override-effect" name="effect" type="range" min="0" max="60" value="${Math.round(effect * 100)}"/></div><button class="button primary" type="submit">Apply override</button>${state.overridden ? `<button class="text-link" type="button" data-study-action="reset-override">Reset to study</button>` : ""}</form></details><div class="flow-next"><button class="button primary" data-study-action="backlog">Continue to backlog ${icon("arrow-right")}</button></div></section></aside></div>`;
+}
+
+function simulationPage() {
+  if (state.studyStage === "panel") return panelStage();
+  if (state.studyStage === "synthesis") return synthesisStage();
+  if (state.studyStage === "impact") return impactStage();
+  return conceptStage();
 }
 function roadmapItems(id) {
   if (id === "Q1") return ["Blockage agent-assist", "Descaling guide", "Pairing assistant"];
@@ -205,9 +292,36 @@ document.addEventListener("click", (event) => {
   const pillar = event.target.closest("[data-pillar]");
   const prompt = event.target.closest("[data-persona-prompt]");
   const addFeature = event.target.closest("[data-feature-add]");
+  const conceptVariant = event.target.closest("[data-concept-variant]");
+  const studyAction = event.target.closest("[data-study-action]");
   if (event.target.closest("[data-assumptions]") || event.target.closest("[data-guardrail]")) { event.preventDefault(); assumptionDialog(); return; }
+  if (conceptVariant) {
+    if (state.studyRunning) { studyRunToken += 1; state.studyRunning = false; state.revealedCohorts = 0; }
+    state.variantId = conceptVariant.dataset.conceptVariant;
+    render();
+    return;
+  }
+  if (studyAction) {
+    const action = studyAction.dataset.studyAction;
+    if (action === "run") startStudyReveal();
+    if (action === "skip") { studyRunToken += 1; state.revealedCohorts = demo.dataset.cohorts.length; state.studyRunning = false; render(); }
+    if (action === "synthesis") { state.studyStage = "synthesis"; setView("simulation"); }
+    if (action === "choose-recommended") { const study = demo.runConceptStudy({ variantId: state.variantId, delayDays: state.delayDays }); state.variantId = study.recommendedVariantId; state.studyStage = "impact"; state.overridden = false; state.overrideUptake = null; state.overrideEffect = null; setView("simulation"); }
+    if (action === "reset-override") { state.overridden = false; state.overrideUptake = null; state.overrideEffect = null; render(); }
+    if (action === "backlog") { if (!state.backlogItems.includes("descale-guide")) state.backlogItems.push("descale-guide"); setView("backlog"); }
+    return;
+  }
   if (view) { setView(view.dataset.iccView); return; }
   if (door) {
+    studyRunToken += 1;
+    state.studyStage = "concept";
+    state.variantId = "B";
+    state.revealedCohorts = 0;
+    state.studyRunning = false;
+    state.overridden = false;
+    state.overrideUptake = null;
+    state.overrideEffect = null;
+    state.overridesOpen = false;
     state.door = door.dataset.door;
     state.question = door.dataset.question;
     state.pillar = door.dataset.doorPillar;
@@ -225,15 +339,24 @@ document.addEventListener("click", (event) => {
     "go-ask": () => setView("ask"), "go-cohort": () => setView("cohort"),
     "go-simulation": () => setView("simulation"), "go-backlog": () => setView("backlog"),
     "go-zoom": () => setView("zoom"), "go-data": () => setView("data"),
-    "reset-demo": () => { Object.assign(state, initialState, { backlogItems: [] }); render(); toast("Demo reset to the entry doors."); },
+    "reset-demo": () => { studyRunToken += 1; Object.assign(state, initialState, { backlogItems: [] }); render(); toast("Demo reset to the entry doors."); },
       "add-selected-to-backlog": () => { if (!state.backlogItems.includes("descale-guide")) state.backlogItems.push("descale-guide"); setView("backlog"); },
   };
   actions[action.dataset.action]?.();
 });
 
 document.addEventListener("input", (event) => {
+  if (event.target.matches("#concept-delay")) {
+    state.delayDays = Number(event.target.value);
+    event.target.previousElementSibling.querySelector("output").value = `${state.delayDays} days`;
+    return;
+  }
   if (event.target.matches("[data-live-range]") || event.target.matches('input[name="scale"]')) {
     updateSimulationPreview(event.target.closest("[data-simulation-form]"));
+    return;
+  }
+  if (event.target.matches("[data-override-form] input[type=range]")) {
+    event.target.closest(".control").querySelector("output").value = `${event.target.value}%`;
   }
 });
 document.addEventListener("submit", (event) => {
@@ -254,6 +377,16 @@ document.addEventListener("submit", (event) => {
   if (event.target.matches("[data-panel-form]")) {
     event.preventDefault();
     state.panelQuestion = new FormData(event.target).get("question") || state.panelQuestion;
+    render();
+    return;
+  }
+  if (event.target.matches("[data-override-form]")) {
+    event.preventDefault();
+    const values = new FormData(event.target);
+    state.overrideUptake = Number(values.get("uptake")) / 100;
+    state.overrideEffect = Number(values.get("effect")) / 100;
+    state.overridden = true;
+    state.overridesOpen = true;
     render();
     return;
   }
