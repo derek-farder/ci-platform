@@ -1,0 +1,15 @@
+html[data-auth="locked"] .nespresso-shell,html[data-auth="locked"] .toast{display:none}
+html[data-auth="locked"],html[data-auth="locked"] body{background:var(--nx-black)}
+#auth-gate{display:none}
+html[data-auth="locked"] #auth-gate{min-height:100dvh;display:grid;place-items:center;padding:24px;background:var(--nx-black)}
+.auth-card{width:min(100%,380px);padding:32px;border:1px solid var(--nx-sand);border-radius:var(--nx-radius);background:var(--nx-white);color:var(--nx-ink)}
+.auth-card img{height:26px;display:block;margin-bottom:22px}
+.auth-card .icc-kicker{display:flex;align-items:center;gap:8px;color:var(--nx-bronze);font:11px var(--mono);letter-spacing:var(--nx-tracking-label);text-transform:uppercase}
+.auth-card .icc-kicker i{width:7px;height:7px;border-radius:50%;background:var(--nx-gold)}
+.auth-card h1{margin:10px 0 6px;color:var(--nx-ink);font:400 26px/1.2 var(--display)}
+.auth-card p{margin:0 0 20px;color:var(--nx-muted);font-size:12px;line-height:1.55}
+.auth-card label{display:block;margin:0 0 6px;color:var(--nx-ink);font-size:11px;font-weight:600}
+.auth-card input{width:100%;height:38px;padding:0 11px;margin-bottom:14px;border:1px solid var(--nx-sand);border-radius:var(--nx-radius);background:var(--nx-white);color:var(--nx-ink);font-size:12px}
+.auth-card input:focus-visible{outline:2px solid var(--nx-gold);outline-offset:1px}
+.auth-card .button{width:100%;justify-content:center}
+.auth-error{min-height:16px;margin:0 0 10px!important;color:var(--nx-alert)!important;font-size:11px!important}
