@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="nespresso-auth.css" />
     <script src="nespresso-auth.js"></script>
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-    <script src="nespresso-data.js" defer></script>
-    <script src="nespresso-experience.js?v=20261007-2" defer></script>
+    <script src="nespresso-data.js?v=20261014-1" defer></script>
+    <script src="nespresso-experience.js?v=20261014-1" defer></script>
   </head>
   <body>
     <main id="auth-gate" aria-label="Sign in">
@@ -43,7 +43,7 @@
           <button class="nav-item active" data-icc-view="doors"><i data-lucide="panels-top-left"></i>Choose a decision</button>
           <button class="nav-item" data-icc-view="ask"><i data-lucide="search"></i>Ask</button>
           <button class="nav-item" data-icc-view="cohort"><i data-lucide="users-round"></i>Cohorts</button>
-          <button class="nav-item" data-icc-view="simulation"><i data-lucide="flask-conical"></i>What-if</button>
+          <button class="nav-item" data-icc-view="simulation"><i data-lucide="flask-conical"></i>Experience test</button>
           <button class="nav-item" data-icc-view="backlog"><i data-lucide="list-todo"></i>Backlog + roadmap</button>
           <button class="nav-item" data-icc-view="zoom"><i data-lucide="layers-2"></i>Zoom out</button>
           <button class="nav-item" data-icc-view="data"><i data-lucide="database"></i>Your data</button>
@@ -56,10 +56,10 @@
       <div class="column">
         <header class="topbar"><div class="breadcrumb"><span>ICC</span><i data-lucide="chevron-right"></i><b id="icc-crumb">Choose a decision</b></div><div class="top-actions"><span class="internal-tag"><i></i>INTERNAL CONCEPT</span><span class="badge-persona top-data-badge" data-assumptions><i data-lucide="flask-conical"></i>ILLUSTRATIVE DATA</span><button class="icon-button" id="assumptions-button" aria-label="Assumptions and method" title="Assumptions & method"><i data-lucide="info"></i></button><button class="icon-button" id="sign-out" aria-label="Sign out" title="Sign out"><i data-lucide="log-out"></i></button><button class="icon-button" data-action="reset-demo" aria-label="Reset demo" title="Reset demo"><i data-lucide="rotate-ccw"></i></button></div></header>
         <main id="icc-app" tabindex="-1"></main>
-        <footer><span>Illustrative data · Synthetic personas and cohorts</span><span><i></i>No live client data or production integrations <b>/</b> Scenario v0.3</span></footer>
+        <footer><span>Illustrative data · Synthetic personas and cohorts</span><span><i></i>No live client data or production integrations <b>/</b> Scenario v0.4</span></footer>
       </div>
     </div>
     <div class="toast" id="icc-toast" role="status" aria-live="polite"></div>
-    <dialog class="assumptions-drawer" id="assumptions-dialog"><form method="dialog"><button class="icon-button drawer-close" aria-label="Close assumptions"><i data-lucide="x"></i></button></form><div class="icc-kicker"><i></i>SHARED REFERENCE</div><h2>Assumptions & method</h2><p>This internal concept uses synthetic personas, cohort aggregates, and scenario assumptions. No Nespresso customer data or live integrations are connected.</p><div class="drawer-section"><b>Output types</b><div><span class="badge-observed">OBSERVED · demo dataset baseline</span><span class="badge-simulated">SIMULATED · rule-based scenario</span><span class="badge-persona">PERSONA · illustrative voice</span></div></div><div class="drawer-section"><b>Simulation method</b><p>Monthly issue risk × nudge uptake × effect size; delay starts relative to an ignored descale alert. The sensitivity band is not a statistical confidence interval.</p></div><div class="drawer-section"><b>Revenue assumption</b><p>Illustrative €0.65 per capsule midpoint, with €0.50–€0.85 price sensitivity. Not Nespresso net revenue. Market mix is unselected; replace with actual average selling price when available.</p><p>Sanity check: 54 capsules/month × 12 × €0.65 ≈ €421 per customer per year.</p></div><div class="drawer-section"><b>Scenario rules</b><p>Planted relationships are hypotheses for this demo, not causal findings. Confirm sources, market, consent, and measure definitions before any first-party pilot.</p></div><button class="button primary" value="close">Close</button></dialog>
+    <dialog class="assumptions-drawer" id="assumptions-dialog"><form method="dialog"><button class="icon-button drawer-close" aria-label="Close assumptions"><i data-lucide="x"></i></button></form><div class="icc-kicker"><i></i>SHARED REFERENCE</div><h2>Assumptions & method</h2><p>This internal concept uses synthetic personas, cohort aggregates, and scenario assumptions. No Nespresso customer data or live integrations are connected.</p><div class="drawer-section"><b>Output types</b><div><span class="badge-observed">OBSERVED · demo dataset baseline</span><span class="badge-simulated">SIMULATED · rule-based scenario</span><span class="badge-persona">PERSONA · illustrative voice</span></div></div><div class="drawer-section"><b>Simulation method</b><p>Monthly issue risk × expected completion × risk reduction; delay starts relative to an ignored descale alert. Completion is averaged over three persona variations per cohort. NPS shift assumes half of prevented issue events would have moved an owner to detractor. The sensitivity band is not a statistical confidence interval.</p></div><div class="drawer-section"><b>Revenue assumption (secondary)</b><p>Illustrative €0.65 per capsule midpoint, with €0.50–€0.85 price sensitivity. Not Nespresso net revenue. Market mix is unselected; replace with actual average selling price when available.</p><p>Sanity check: 54 capsules/month × 12 × €0.65 ≈ €421 per customer per year.</p></div><div class="drawer-section"><b>Scenario rules</b><p>Planted relationships are hypotheses for this demo, not causal findings. Confirm sources, market, consent, and measure definitions before any first-party pilot.</p></div><button class="button primary" value="close">Close</button></dialog>
   </body>
 </html>

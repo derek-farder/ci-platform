@@ -10,12 +10,13 @@ test("synthetic cohort shares cover the full population", () => {
   assert.equal(customerTotal, demo.dataset.customerCount);
 });
 
-test("issue ranking uses volume, preventability, and retention impact", () => {
+test("issue ranking uses volume, preventability, and NPS impact", () => {
   const ranked = demo.rankIssues();
 
   assert.equal(ranked[0].id, "blockage");
   assert.ok(ranked.every((issue, index) => index === 0 || ranked[index - 1].priorityScore >= issue.priorityScore));
-  assert.equal(ranked[0].priorityScore, ranked[0].contacts * ranked[0].preventability * ranked[0].retentionImpact);
+  assert.equal(ranked[0].priorityScore, ranked[0].contacts * ranked[0].preventability * ranked[0].npsImpact);
+  assert.ok(ranked.every((issue) => issue.effortScore >= 1 && issue.effortScore <= 7));
   assert.equal(demo.dataset.rules.setupSamNeverPairsAppRate, 0.20);
   assert.equal(demo.dataset.rules.weekOnePairingFailureAppNonConnection, 0.40);
   assert.notEqual(demo.dataset.rules.setupSamNeverPairsAppRate, demo.dataset.rules.weekOnePairingFailureAppNonConnection);
@@ -46,6 +47,9 @@ test("descale what-if is bounded, reproducible, and linked to its synthetic data
   assert.equal(result.midpoint.baselineBlockageContacts, 1633);
   assert.equal(result.midpoint.pctBlockageContactsAvoided, 11.2);
   assert.equal(result.midpoint.capsuleRevenueProtectedEur, 2311);
+  assert.equal(result.midpoint.npsPointShift, 2.8);
+  assert.equal(result.midpoint.directRepurchaseDeltaPoints, 0.37);
+  assert.ok(result.ranges.npsPointShift.low < result.midpoint.npsPointShift && result.ranges.npsPointShift.high > result.midpoint.npsPointShift);
   assert.ok(result.ranges.crcContactsAvoided.low <= result.midpoint.crcContactsAvoided);
   assert.ok(result.ranges.crcContactsAvoided.high >= result.midpoint.crcContactsAvoided);
   assert.ok(result.ranges.capsuleRevenueProtectedEur.low < result.midpoint.capsuleRevenueProtectedEur);
@@ -85,33 +89,36 @@ test("simulation scales linearly to 100,000 without changing its percentage", ()
   assert.equal(scaled.midpoint.pctBlockageContactsAvoided, cohort.midpoint.pctBlockageContactsAvoided);
   assert.equal(scaled.assumptions.scaleFactor, 100000 / 3000);
   assert.equal(scaled.midpoint.capsuleRevenueProtectedEur, 77034);
+  assert.equal(scaled.midpoint.npsPointShift, cohort.midpoint.npsPointShift);
 });
 
 test("Feature Card candidates have a strict, documented priority order", () => {
   const ranked = demo.rankFeatureCards();
 
-  assert.deepEqual(ranked.map((feature) => feature.id), ["blockage-agent-assist", "descale-guide", "pairing-assistant", "silent-reengagement"]);
+  assert.deepEqual(ranked.map((feature) => feature.id), ["blockage-agent-assist", "descale-guide", "pairing-assistant", "unregistered-proactive-help"]);
   assert.ok(ranked.every((feature, index) => index === 0 || ranked[index - 1].priorityScore > feature.priorityScore));
   assert.ok(ranked.every((feature) => feature.dataNeeded.length > 0 && feature.nessyFit));
 });
 
 test("pillar visuals are calculated from synthetic cohort assumptions", () => {
-  const subscription = demo.subscriptionByCohort();
+  const nps = demo.npsByCohort();
   const lapse = demo.lapseComparison();
 
-  assert.equal(subscription.length, 5);
-  assert.equal(subscription.find((cohort) => cohort.cohortId === "connected-enthusiast").subscriptionRate, 0.82);
-  assert.equal(subscription.find((cohort) => cohort.cohortId === "silent-struggler").subscribedCount, 200);
+  assert.equal(nps.length, 5);
+  assert.equal(nps.find((cohort) => cohort.cohortId === "connected-enthusiast").nps, 52);
+  assert.equal(nps.find((cohort) => cohort.cohortId === "silent-struggler").nps, 6);
   assert.equal(lapse.status, "synthetic-baseline");
   assert.equal(lapse.unresolvedRate, lapse.resolvedRate * 2);
+  assert.equal(lapse.resolvedRepurchaseRate, 0.92);
+  assert.ok(Math.abs(lapse.unresolvedRepurchaseRate - 0.84) < 1e-10);
   assert.equal(demo.answerCohortPanel("What would make support easier?").answers.length, 5);
 });
 
 test("concept study computes stance, funnel, and target outcomes for all 15 cohort-variant pairs", () => {
   const expectedTarget = {
-    A: { uptake: 0.10725, stance: "Unlikely", avoidedPct: 1.79, effect: 0.20 },
-    B: { uptake: 0.160875, stance: "Maybe", avoidedPct: 4.29, effect: 0.32 },
-    C: { uptake: 0.3542175, stance: "Likely", avoidedPct: 13.28, effect: 0.45 },
+    A: { uptake: 0.10446418125, stance: "Unlikely", avoidedPct: 1.74, nps: 0.4, effect: 0.20 },
+    B: { uptake: 0.156696271875, stance: "Maybe", avoidedPct: 4.18, nps: 1.1, effect: 0.32 },
+    C: { uptake: 0.23769135365625, stance: "Maybe", avoidedPct: 7.92, nps: 2.0, effect: 0.40 },
   };
 
   for (const variant of demo.dataset.conceptVariants) {
@@ -127,10 +134,15 @@ test("concept study computes stance, funnel, and target outcomes for all 15 coho
     assert.equal(target.stance, expected.stance);
     assert.equal(study.targetEffect, expected.effect);
     assert.equal(study.variantComparison.find((item) => item.id === variant.id).pctContactsAvoided, expected.avoidedPct);
+    assert.equal(study.variantComparison.find((item) => item.id === variant.id).npsPointShift, expected.nps);
+    assert.equal(study.recommendedVariantId, "C");
+    assert.equal(target.variations.length, 3);
+    assert.ok(Math.abs(target.stanceSplit.reduce((sum, part) => sum + part.share, 0) - 1) < 1e-10);
+    assert.ok(Math.abs(target.expectedUptake - target.variations.reduce((sum, item) => sum + item.weight * item.expectedUptake, 0)) < 1e-10);
     assert.ok(target.funnel.reach >= target.expectedUptake);
     assert.ok(target.funnel.notice >= target.funnel.act);
     assert.equal(silent.stance, "Unlikely");
-    assert.ok(silent.expectedUptake <= 0.051);
+    assert.ok(silent.expectedUptake <= 0.035);
     assert.equal(enthusiast.stance, "Likely");
     assert.equal(target.why, demo.dataset.cohorts.find((cohort) => cohort.id === target.cohortId).engagementVoice[target.stance.toLowerCase()]);
     assert.doesNotMatch(target.why, /\d/);
@@ -143,7 +155,7 @@ test("the selected study's numeric uptake and effect flow directly into impact",
   const comparison = study.variantComparison.find((variant) => variant.id === "B");
 
   assert.equal(impact.midpoint.pctBlockageContactsAvoided, comparison.pctContactsAvoided);
-  assert.equal(impact.midpoint.pctBlockageContactsAvoided, 4.29);
+  assert.equal(impact.midpoint.pctBlockageContactsAvoided, 4.18);
 });
 
 test("impact inputs default to study results and can be reset after an override", () => {
@@ -158,12 +170,12 @@ test("impact inputs default to study results and can be reset after an override"
   assert.throws(() => demo.resolveConceptImpactInputs(study, { uptake: 1.2, effect: 0.4 }), RangeError);
 });
 
-test("incentive economics report gross and net euro values", () => {
-  const study = demo.runConceptStudy({ variantId: "C" });
-  const economics = demo.calculateConceptEconomics({ variantId: "C", uptake: study.targetUptake, effect: study.targetEffect });
+test("persona variations show spread within one cohort", () => {
+  const study = demo.runConceptStudy({ variantId: "B" });
+  const target = study.reactions.find((reaction) => reaction.cohortId === "overdue-descaler");
+  const weights = demo.dataset.personaVariations.reduce((sum, variation) => sum + variation.weight, 0);
 
-  assert.equal(economics.grossRevenueProtectedEur, demo.simulateDescaleNudge({ uptake: study.targetUptake, effect: study.targetEffect }).midpoint.capsuleRevenueProtectedEur);
-  assert.equal(economics.kitCostEur, Math.round(study.targetUptake * 3000 * demo.dataset.rules.descalingKitCostEur));
-  assert.equal(economics.netRevenueProtectedEur, Math.round(economics.grossRevenueProtectedEur - study.targetUptake * 3000 * demo.dataset.rules.descalingKitCostEur));
-  assert.ok(economics.netRevenueProtectedEur < 0);
+  assert.ok(Math.abs(weights - 1) < 1e-10);
+  assert.ok(new Set(target.variations.map((variation) => variation.stance)).size > 1);
+  assert.ok(demo.dataset.conceptVariants.every((variant) => !("incentive" in variant)));
 });

@@ -6,8 +6,8 @@
 })(typeof globalThis === "object" ? globalThis : this, function () {
   const dataset = {
     id: "nespresso-aotp-synthetic",
-    version: "0.3",
-    generatedAt: "2026-10-07",
+    version: "0.4",
+    generatedAt: "2026-10-14",
     customerCount: 10000,
     historyMonths: 24,
     marketMix: ["CH", "FR", "US"],
@@ -23,8 +23,8 @@
         quoteEvidence: ["Week-one pairing failure", "Early CRC chat contact"],
         baseIssueRateMonthly: 0.018,
         monthlyCapsules: 42,
-        subscriptionRate: 0.12,
-        engagement: { appReach: 0.45, emailReach: 0.80, notice: 0.75, baseAct: 0.40, clarityLift: 0.60, incentiveLift: 0.20 },
+        npsBaseline: 18,
+        engagement: { appReach: 0.45, emailReach: 0.80, notice: 0.75, baseAct: 0.40, clarityLift: 0.60 },
         engagementVoice: { likely: "If the next step is clear, I can finish setup while I am still getting started.", maybe: "I would try it if the instructions match the screen I see.", unlikely: "If the app is not paired, I may not see the prompt." },
       },
       {
@@ -37,8 +37,8 @@
         quoteEvidence: ["Descale alert ignored for 60+ days", "Flow-rate drop before blockage contact"],
         baseIssueRateMonthly: 0.012,
         monthlyCapsules: 54,
-        subscriptionRate: 0.34,
-        engagement: { appReach: 0.55, emailReach: 0.70, notice: 0.65, baseAct: 0.30, clarityLift: 0.50, incentiveLift: 0.40 },
+        npsBaseline: 24,
+        engagement: { appReach: 0.55, emailReach: 0.70, notice: 0.65, baseAct: 0.30, clarityLift: 0.50 },
         engagementVoice: { likely: "A short guide would help me take care of it before the machine slows down.", maybe: "I might act if I can see how quick it is and what I need.", unlikely: "If coffee still comes out, I may leave the alert for later." },
       },
       {
@@ -51,8 +51,8 @@
         quoteEvidence: ["App-active", "Prior response to push notification"],
         baseIssueRateMonthly: 0.006,
         monthlyCapsules: 62,
-        subscriptionRate: 0.82,
-        engagement: { appReach: 0.90, emailReach: 0.75, notice: 0.85, baseAct: 0.55, clarityLift: 0.20, incentiveLift: 0.20 },
+        npsBaseline: 52,
+        engagement: { appReach: 0.90, emailReach: 0.75, notice: 0.85, baseAct: 0.55, clarityLift: 0.20 },
         engagementVoice: { likely: "I would use a prompt that opens a clear action from the app.", maybe: "It depends on whether it adds anything to the reminders I already use.", unlikely: "I usually keep up with maintenance without another prompt." },
       },
       {
@@ -65,9 +65,9 @@
         quoteEvidence: ["Low app use", "Unreported issue and capsule decline"],
         baseIssueRateMonthly: 0.010,
         monthlyCapsules: 35,
-        subscriptionRate: 0.08,
-        engagement: { appReach: 0.10, emailReach: 0.25, notice: 0.40, baseAct: 0.20, clarityLift: 0.30, incentiveLift: 0.50 },
-        engagementVoice: { likely: "If it arrives somewhere I already check, I can decide whether to act.", maybe: "A useful offer might get my attention if I can find the details.", unlikely: "I do not use the app much, so I could miss this entirely." },
+        npsBaseline: 6,
+        engagement: { appReach: 0.10, emailReach: 0.25, notice: 0.40, baseAct: 0.20, clarityLift: 0.30 },
+        engagementVoice: { likely: "If it arrives somewhere I already check, I can decide whether to act.", maybe: "I might try it if I can find the details somewhere I already look.", unlikely: "I do not use the app much, so I could miss this entirely." },
       },
       {
         id: "susie-serial-reactivator",
@@ -79,17 +79,17 @@
         quoteEvidence: ["Prior unresolved machine issue", "Returned after a 90+ day lapse"],
         baseIssueRateMonthly: 0.009,
         monthlyCapsules: 47,
-        subscriptionRate: 0.21,
-        engagement: { appReach: 0.40, emailReach: 0.60, notice: 0.60, baseAct: 0.30, clarityLift: 0.30, incentiveLift: 0.60 },
-        engagementVoice: { likely: "A practical reason to return would help me give it another try.", maybe: "I would consider it if the earlier issue really feels resolved.", unlikely: "An offer would not help if I still expect the same machine problem." },
+        npsBaseline: 10,
+        engagement: { appReach: 0.40, emailReach: 0.60, notice: 0.60, baseAct: 0.30, clarityLift: 0.30 },
+        engagementVoice: { likely: "A practical reason to return would help me give it another try.", maybe: "I would consider it if the earlier issue really feels resolved.", unlikely: "A new prompt would not help if I still expect the same machine problem." },
       },
     ],
     issues: [
-      { id: "blockage", name: "Blockage / flow issue", contacts: 2680, preventability: 0.78, retentionImpact: 0.82, voiceAhtMinutes: 18.6, chatRepeatRate: 0.14 },
-      { id: "pairing", name: "App pairing failure", contacts: 1540, preventability: 0.84, retentionImpact: 0.54, voiceAhtMinutes: 11.2, chatRepeatRate: 0.28 },
-      { id: "capsule-recognition", name: "Capsule recognition", contacts: 1190, preventability: 0.63, retentionImpact: 0.48, voiceAhtMinutes: 13.1, chatRepeatRate: 0.19 },
-      { id: "descale-guidance", name: "Descaling guidance", contacts: 980, preventability: 0.76, retentionImpact: 0.62, voiceAhtMinutes: 15.4, chatRepeatRate: 0.12 },
-      { id: "first-brew", name: "First brew / setup", contacts: 720, preventability: 0.71, retentionImpact: 0.59, voiceAhtMinutes: 12.3, chatRepeatRate: 0.17 },
+      { id: "blockage", name: "Blockage / flow issue", contacts: 2680, preventability: 0.78, npsImpact: 0.82, effortScore: 5.8, voiceAhtMinutes: 18.6, chatRepeatRate: 0.14 },
+      { id: "pairing", name: "App pairing failure", contacts: 1540, preventability: 0.84, npsImpact: 0.54, effortScore: 5.4, voiceAhtMinutes: 11.2, chatRepeatRate: 0.28 },
+      { id: "capsule-recognition", name: "Capsule recognition", contacts: 1190, preventability: 0.63, npsImpact: 0.48, effortScore: 4.6, voiceAhtMinutes: 13.1, chatRepeatRate: 0.19 },
+      { id: "descale-guidance", name: "Descaling guidance", contacts: 980, preventability: 0.76, npsImpact: 0.62, effortScore: 4.9, voiceAhtMinutes: 15.4, chatRepeatRate: 0.12 },
+      { id: "first-brew", name: "First brew / setup", contacts: 720, preventability: 0.71, npsImpact: 0.59, effortScore: 4.2, voiceAhtMinutes: 12.3, chatRepeatRate: 0.17 },
     ],
     rules: {
       ignoredDescaleAlertDays: 60,
@@ -107,12 +107,17 @@
       illustrativeCapsulePriceEur: 0.65,
       capsulePriceRangeEur: { low: 0.50, high: 0.85 },
       resolvedContactLapseRate: 0.08,
-      descalingKitCostEur: 12,
+      detractorShareAfterIssueEvent: 0.5,
     },
     conceptVariants: [
-      { id: "A", name: "Reminder", channel: "App push", tutorial: false, incentive: false, effectIfActed: 0.20 },
-      { id: "B", name: "Guided", channel: "App push", tutorial: true, incentive: false, effectIfActed: 0.32 },
-      { id: "C", name: "Guided + kit", channel: "App push + email", tutorial: true, incentive: true, incentiveDescription: "Descaling kit offered with next capsule order", effectIfActed: 0.45 },
+      { id: "A", name: "Clearer alert", channel: "In-app alert", tutorial: false, emailCheckIn: false, effectIfActed: 0.20 },
+      { id: "B", name: "Guided in-app descaling", channel: "In-app guide", tutorial: true, emailCheckIn: false, effectIfActed: 0.32 },
+      { id: "C", name: "Proactive check-in", channel: "In-app guide + email check-in", tutorial: true, emailCheckIn: true, effectIfActed: 0.40 },
+    ],
+    personaVariations: [
+      { id: "tech-confident", name: "Tech-confident", lens: "Wants to finish it in the app", weight: 0.30, multipliers: { reach: 1.2, notice: 1.1, act: 1.15 } },
+      { id: "time-poor", name: "Time-poor", lens: "Needs it to take under two minutes", weight: 0.45, multipliers: { reach: 1, notice: 0.9, act: 0.95 } },
+      { id: "skeptical", name: "Skeptical", lens: "Needs proof it matters before acting", weight: 0.25, multipliers: { reach: 0.9, notice: 0.85, act: 0.7 } },
     ],
     knowledge: [
       { id: "SYN-KB-DESC-01", title: "When a machine needs descaling", source: "Demo-authored illustrative guidance", clientContent: false },
@@ -140,7 +145,7 @@
         nessyFit: "High",
         effort: "Medium",
         dataNeeded: ["Descale events", "Nudge exposure + action", "CRC reasons"],
-        productionDataNeeded: "Consent and channel eligibility; machine model and event telemetry; nudge exposure and completion; CRC reason and resolution; subscription and order outcomes.",
+        productionDataNeeded: "Consent and channel eligibility; machine model and event telemetry; guide exposure and completion; NPS/VoC responses; CRC reason and resolution; order outcomes.",
         priorityInputs: { impact: 0.86, feasibility: 0.72, strategicFit: 0.8 },
       },
       {
@@ -155,9 +160,9 @@
         priorityInputs: { impact: 0.78, feasibility: 0.82, strategicFit: 0.78 },
       },
       {
-        id: "silent-reengagement",
-        title: "Silent Struggler re-engagement",
-        problem: "Owners with unreported issues may quietly reduce capsule orders without entering a support journey.",
+        id: "unregistered-proactive-help",
+        title: "Proactive help for unregistered owners",
+        problem: "Owners with unregistered or older machines may struggle quietly and drift to other capsule sources without ever contacting support.",
         cohortId: "silent-struggler",
         nessyFit: "Medium",
         effort: "High",
@@ -179,12 +184,11 @@
     return dataset.cohorts.map((cohort) => ({ ...cohort, count: cohortCount(cohort) }));
   }
 
-  function subscriptionByCohort() {
+  function npsByCohort() {
     return summarizeCohorts().map((cohort) => ({
       cohortId: cohort.id,
       cohortName: cohort.name,
-      subscriptionRate: cohort.subscriptionRate,
-      subscribedCount: Math.round(cohort.count * cohort.subscriptionRate),
+      nps: cohort.npsBaseline,
       cohortCount: cohort.count,
     }));
   }
@@ -195,6 +199,8 @@
       status: "synthetic-baseline",
       resolvedRate,
       unresolvedRate: resolvedRate * dataset.rules.unresolvedCrcLapseMultiplier,
+      resolvedRepurchaseRate: 1 - resolvedRate,
+      unresolvedRepurchaseRate: 1 - resolvedRate * dataset.rules.unresolvedCrcLapseMultiplier,
       multiplier: dataset.rules.unresolvedCrcLapseMultiplier,
     };
   }
@@ -224,17 +230,34 @@
     const variants = dataset.conceptVariants;
     if (variantId && !variants.some((variant) => variant.id === variantId)) throw new RangeError("Unknown concept variant.");
 
+    function stanceFor(uptake) {
+      return uptake >= 0.30 ? "Likely" : uptake >= 0.15 ? "Maybe" : "Unlikely";
+    }
+
+    function funnelFor(engagement, variant, multipliers) {
+      const appReach = Math.min(1, engagement.appReach * multipliers.reach);
+      const emailReach = Math.min(1, engagement.emailReach * multipliers.reach);
+      const reach = variant.emailCheckIn ? 1 - (1 - appReach) * (1 - emailReach) : appReach;
+      const notice = Math.min(1, engagement.notice * multipliers.notice);
+      const act = Math.min(0.95, engagement.baseAct * (1 + engagement.clarityLift * Number(variant.tutorial)) * multipliers.act);
+      return { reach, notice, act, uptake: reach * notice * act };
+    }
+
     function score(cohort, variant) {
-      const reach = variant.channel === "App push + email"
-        ? 1 - (1 - cohort.engagement.appReach) * (1 - cohort.engagement.emailReach)
-        : cohort.engagement.appReach;
-      const notice = cohort.engagement.notice;
-      const actRate = Math.min(0.95,
-        cohort.engagement.baseAct
-        * (1 + cohort.engagement.clarityLift * Number(variant.tutorial))
-        * (1 + cohort.engagement.incentiveLift * Number(variant.incentive)));
-      const expectedUptake = reach * notice * actRate;
-      const stance = expectedUptake >= 0.30 ? "Likely" : expectedUptake >= 0.15 ? "Maybe" : "Unlikely";
+      const variations = dataset.personaVariations.map((variation) => {
+        const funnel = funnelFor(cohort.engagement, variant, variation.multipliers);
+        return { id: variation.id, name: variation.name, lens: variation.lens, weight: variation.weight, expectedUptake: funnel.uptake, stance: stanceFor(funnel.uptake), funnel };
+      });
+      const weighted = (key) => variations.reduce((sum, variation) => sum + variation.weight * variation.funnel[key], 0);
+      const reach = weighted("reach");
+      const notice = weighted("notice");
+      const actRate = weighted("act");
+      const expectedUptake = weighted("uptake");
+      const stance = stanceFor(expectedUptake);
+      const stanceSplit = ["Likely", "Maybe", "Unlikely"].map((label) => ({
+        stance: label,
+        share: variations.filter((variation) => variation.stance === label).reduce((sum, variation) => sum + variation.weight, 0),
+      }));
       const losses = [
         { key: "reach", value: 1 - reach },
         { key: "notice", value: reach * (1 - notice) },
@@ -242,20 +265,22 @@
       ];
       const barrierKey = losses.reduce((largest, current) => current.value > largest.value ? current : largest).key;
       const barriers = {
-        reach: "I may not see it",
-        notice: "I may ignore the alert",
-        act: "It may feel like a chore or lack a reason to act now",
+        reach: "I may not come across it",
+        notice: "I may not understand why it matters",
+        act: "It may feel like a chore to finish",
       };
       const changes = {
-        reach: "Reach me through a channel I use",
+        reach: "Show it somewhere I already look",
         notice: "Make the reason to open it clear",
-        act: variant.tutorial ? "Show me the two-minute steps" : variant.incentive ? "Offer a useful reason to act now" : "Show me what changes if I act",
+        act: variant.tutorial ? "Show me the two-minute steps" : "Show me what changes if I act",
       };
       return {
         cohortId: cohort.id,
         cohortName: cohort.name,
         stance,
         expectedUptake,
+        stanceSplit,
+        variations: variations.map(({ funnel, ...variation }) => variation),
         funnel: { reach, notice, act: actRate },
         barrierKey,
         mainBarrier: barriers[barrierKey],
@@ -283,10 +308,11 @@
         effectIfActed: variant.effectIfActed,
         avoidedContacts: impact.midpoint.crcContactsAvoided,
         pctContactsAvoided: impact.midpoint.pctBlockageContactsAvoided,
+        npsPointShift: impact.midpoint.npsPointShift,
       };
     });
     const selected = reactions.find((item) => item.variantId === (variantId || "B")) || reactions[0];
-    const recommended = reactions.reduce((best, item) => item.avoidedContacts > best.avoidedContacts ? item : best);
+    const recommended = reactions.reduce((best, item) => item.npsPointShift > best.npsPointShift ? item : best);
     const barrierCounts = selected.cohorts.reduce((counts, reaction) => {
       counts[reaction.mainBarrier] = (counts[reaction.mainBarrier] || 0) + 1;
       return counts;
@@ -306,13 +332,13 @@
       selectedVariant: selected.variant,
       recommendedVariantId: recommended.variantId,
       recommendedVariant: recommended.variant,
-      recommendationReason: `${recommended.variant.name} has the highest expected avoided contacts for ${targetCohort.name} in this synthetic scenario.`,
-      variantComparison: reactions.map(({ variantId: id, variantName, targetUptake: uptake, effectIfActed, avoidedContacts, pctContactsAvoided }) => ({ id, variantName, uptake, effectIfActed, avoidedContacts, pctContactsAvoided })),
+      recommendationReason: `${recommended.variant.name} has the highest simulated NPS shift for ${targetCohort.name} in this synthetic scenario.`,
+      variantComparison: reactions.map(({ variantId: id, variantName, targetUptake: uptake, effectIfActed, avoidedContacts, pctContactsAvoided, npsPointShift }) => ({ id, variantName, uptake, effectIfActed, avoidedContacts, pctContactsAvoided, npsPointShift })),
       topBarriers,
       whoItWorksFor: selected.cohorts.filter((reaction) => reaction.stance === "Likely").map((reaction) => reaction.cohortName),
       whoItMayMiss: selected.cohorts.filter((reaction) => reaction.stance === "Unlikely").map((reaction) => reaction.cohortName),
-      pilotValidation: { holdoutSize: "10% control group (provisional)", primaryKpi: "Blockage-related CRC contacts per eligible cohort member over 12 months" },
-      synthesis: "Reach determines who can see the concept. Clear steps help people who notice it decide to act. Some cohorts remain difficult to reach digitally and may need a different channel.",
+      pilotValidation: { holdoutSize: "10% control group (provisional)", primaryKpi: "Transactional NPS and direct repurchase rate for eligible cohort members over 12 months; blockage contacts as a secondary signal" },
+      synthesis: "Discovery determines who encounters the experience. Clear steps help people who understand it finish the task. Owners within the same cohort differ, and some remain hard to reach digitally.",
     };
   }
 
@@ -357,7 +383,7 @@
     return dataset.issues
       .map((issue) => ({
         ...issue,
-        priorityScore: issue.contacts * issue.preventability * issue.retentionImpact,
+        priorityScore: issue.contacts * issue.preventability * issue.npsImpact,
       }))
       .sort((left, right) => right.priorityScore - left.priorityScore);
   }
@@ -368,23 +394,6 @@
     return Math.round(
       (inputs.impact * weights.impact + inputs.feasibility * weights.feasibility + inputs.strategicFit * weights.strategicFit) * 100,
     );
-  }
-
-  function calculateConceptEconomics({ variantId, uptake, effect, delayDays = dataset.rules.defaultNudgeDelayDays, scaleToCustomers = null, targetCohortId = "overdue-descaler" }) {
-    const variant = dataset.conceptVariants.find((item) => item.id === variantId);
-    const cohort = dataset.cohorts.find((item) => item.id === targetCohortId);
-    if (!variant || !cohort) throw new RangeError("Unknown concept variant or synthetic cohort.");
-    const impact = simulateDescaleNudge({ uptake, effect, nudgeDelayDays: delayDays, scaleToCustomers });
-    const actedCustomers = impact.assumptions.cohortCustomers * uptake;
-    const kitCostEur = variant.incentive ? actedCustomers * dataset.rules.descalingKitCostEur : 0;
-    return {
-      variantId,
-      grossRevenueProtectedEur: impact.midpoint.capsuleRevenueProtectedEur,
-      actedCustomers,
-      kitCostEur: Math.round(kitCostEur),
-      netRevenueProtectedEur: Math.round(impact.midpoint.capsuleRevenueProtectedEur - kitCostEur),
-      limitation: "Illustrative gross/net scenario using capsule retail value and a provisional kit cost; not Nespresso net revenue or a forecast.",
-    };
   }
 
   function rankFeatureCards() {
@@ -444,14 +453,16 @@
     const baselineContacts = monthly.reduce((sum, step) => sum + step.baselineContacts, 0);
     const pctBlockageContactsAvoided = baselineContacts ? (preventedContacts / baselineContacts) * 100 : 0;
     const lapsesAvoided = preventedContacts * dataset.rules.incrementalLapseRiskAfterUnresolvedContact;
-    const lapseDeltaPercentagePoints = (lapsesAvoided / customers) * 100;
+    const directRepurchaseDeltaPoints = (lapsesAvoided / customers) * 100;
+    const npsPointShift = (preventedEvents * dataset.rules.detractorShareAfterIssueEvent / customers) * 100;
     const capsuleVolumeProtected = lapsesAvoided * cohort.monthlyCapsules * dataset.rules.retainedCapsulesMonths;
     const capsuleRevenueProtectedEur = capsuleVolumeProtected * dataset.rules.illustrativeCapsulePriceEur;
     const midpoint = {
       crcContactsAvoided: Math.round(preventedContacts),
       baselineBlockageContacts: Math.round(baselineContacts),
       pctBlockageContactsAvoided: Number(pctBlockageContactsAvoided.toFixed(2)),
-      lapseRateDeltaPercentagePoints: Number(lapseDeltaPercentagePoints.toFixed(2)),
+      npsPointShift: Number(npsPointShift.toFixed(1)),
+      directRepurchaseDeltaPoints: Number(directRepurchaseDeltaPoints.toFixed(2)),
       capsuleVolumeProtected: Math.round(capsuleVolumeProtected),
       capsuleRevenueProtectedEur: Math.round(capsuleRevenueProtectedEur),
     };
@@ -480,9 +491,13 @@
       midpoint,
       ranges: {
         crcContactsAvoided: range(midpoint.crcContactsAvoided),
-        lapseRateDeltaPercentagePoints: {
-          low: Number((midpoint.lapseRateDeltaPercentagePoints * (1 - uncertainty)).toFixed(2)),
-          high: Number((midpoint.lapseRateDeltaPercentagePoints * (1 + uncertainty)).toFixed(2)),
+        npsPointShift: {
+          low: Number((npsPointShift * (1 - uncertainty)).toFixed(1)),
+          high: Number((npsPointShift * (1 + uncertainty)).toFixed(1)),
+        },
+        directRepurchaseDeltaPoints: {
+          low: Number((directRepurchaseDeltaPoints * (1 - uncertainty)).toFixed(2)),
+          high: Number((directRepurchaseDeltaPoints * (1 + uncertainty)).toFixed(2)),
         },
         capsuleVolumeProtected: range(midpoint.capsuleVolumeProtected),
         capsuleRevenueProtectedEur: {
@@ -507,6 +522,7 @@
         effect,
         contactsPerPreventedIssue: dataset.rules.contactsPerPreventedIssue,
         incrementalLapseRiskAfterUnresolvedContact: dataset.rules.incrementalLapseRiskAfterUnresolvedContact,
+        detractorShareAfterIssueEvent: dataset.rules.detractorShareAfterIssueEvent,
         monthlyCapsules: cohort.monthlyCapsules,
         retainedCapsulesMonths: dataset.rules.retainedCapsulesMonths,
         illustrativeCapsulePriceEur: dataset.rules.illustrativeCapsulePriceEur,
@@ -522,7 +538,7 @@
     dataset,
     cohortCount,
     summarizeCohorts,
-    subscriptionByCohort,
+    npsByCohort,
     lapseComparison,
     answerCohortPanel,
     answerPersonaQuestion,
@@ -531,7 +547,6 @@
     rankFeatureCards,
     runConceptStudy,
     resolveConceptImpactInputs,
-    calculateConceptEconomics,
     simulateDescaleNudge,
   };
 });
