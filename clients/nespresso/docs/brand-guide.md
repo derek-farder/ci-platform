@@ -10,7 +10,7 @@ The theme tokens live in [`../nespresso-brand.css`](../nespresso-brand.css). The
 
 ## Logo and approval
 
-Do not recreate or approximate the Nespresso wordmark. The supplied PNG is placed as-is in a 160 × 28px white `.brand-logo-slot`; do not recolor or alter it. Replace it only with a file from the official brand kit if Vincent's team supplies one. Do not add campaign images or ambassador likenesses. The header remains marked “Concept demo.”
+Do not recreate or approximate the Nespresso wordmark. The supplied PNG is placed as-is in a 160 × 28px white `.brand-logo-slot`; do not recolor or alter it. Replace it only with a file from the official brand kit if Vincent's team supplies one. The favicons (`favicon-32.png`, `apple-touch-icon.png` in the same folder) are the N cut from that same PNG with the rest of the wordmark removed; nothing was redrawn or recolored. Derek Farder requested them on 2026-10-16. Regenerate them from the official kit if the logo is replaced. Do not add campaign images or ambassador likenesses. The header remains marked “Concept demo.”
 
 This approval covers sharing the concept demo with the Nespresso client team. It does not imply Nespresso endorsement. Confirm any wider distribution, market/language, and whether heritage or Vertuo World styling is preferred.
 
