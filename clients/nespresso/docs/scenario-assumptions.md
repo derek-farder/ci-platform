@@ -1,6 +1,6 @@
 # ICC Synthetic Scenario Assumptions
 
-Version `0.4` · Internal concept · Dataset ID `nespresso-aotp-synthetic`
+Version `0.4` · Concept demo · Dataset ID `nespresso-aotp-synthetic`
 
 ## Scope and provenance
 
@@ -61,6 +61,10 @@ The following numbers were added only to make the prototype calculable. They are
 - AWS source-system names and statuses in the “Your data” bridge. These are examples for discussion, not confirmed integrations.
 - Provisional Feature Card scoring weights of 40% impact, 30% feasibility, and 30% strategic fit, plus input scores. The Nessy Chapter 1 fit and rubric require client validation.
 - Synthetic population metadata and demo-authored knowledge article titles. Knowledge content is not Nespresso intellectual property.
+
+## Innovation signals (added after v0.4, provisional)
+
+The “Workarounds & unmet needs” starter shows three demo-authored example themes: descaling on the owner's own schedule (Overdue Descaler), capsule-to-cup-size confusion (Setup Sam), and gifted machines with no account (Silent Struggler). Each has a workaround, a candidate opportunity, source labels (CRC notes, NPS comments, app reviews, social posts, machine events), and a qualitative trend label (Rising, Steady, New). None of these comes from real social, review, or call data, and the trend labels are not measured. A production version would need an approved social-listening or review source and a legal review of collection terms; the demo does not scrape or call any external service.
 
 ## Simulation rule
 

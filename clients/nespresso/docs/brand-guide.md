@@ -1,6 +1,6 @@
 # Nespresso ICC Interim Brand Guide
 
-**Status:** Interim theme for the internal concept demo. Approved by Derek Farder for demo use on 2026-10-07. Replace with Nespresso's official brand kit before anything leaves the internal working session. A user-supplied transparent logo asset is available at `../assets/brand/Nespresso_logo.png`; verify usage rules with Vincent's team before external distribution.
+**Status:** Interim theme for the concept demo. Approved by Derek Farder for demo use on 2026-10-07, and confirmed for client hands-on use on 2026-10-15. A user-supplied transparent logo asset is available at `../assets/brand/Nespresso_logo.png`. Replace with Nespresso's official brand kit if Vincent's team supplies one.
 
 ## Direction
 
@@ -10,9 +10,9 @@ The theme tokens live in [`../nespresso-brand.css`](../nespresso-brand.css). The
 
 ## Logo and approval
 
-Do not recreate or approximate the Nespresso wordmark. The supplied PNG is placed as-is in a 160 × 28px white `.brand-logo-slot`; do not recolor or alter it. Replace it only with a file from the official brand kit if Vincent's team supplies one. Do not add campaign images or ambassador likenesses. The header remains marked “Internal concept.”
+Do not recreate or approximate the Nespresso wordmark. The supplied PNG is placed as-is in a 160 × 28px white `.brand-logo-slot`; do not recolor or alter it. Replace it only with a file from the official brand kit if Vincent's team supplies one. Do not add campaign images or ambassador likenesses. The header remains marked “Concept demo.”
 
-This approval covers an internally presented prototype only. It does not imply Nespresso endorsement or approval for external distribution. Confirm broader presentation approval, official logo usage, market/language, and whether heritage or Vertuo World styling is preferred before external use.
+This approval covers sharing the concept demo with the Nespresso client team. It does not imply Nespresso endorsement. Confirm any wider distribution, market/language, and whether heritage or Vertuo World styling is preferred.
 
 ## Typography and layout
 

@@ -124,6 +124,35 @@
       { id: "SYN-KB-PAIR-01", title: "Check pairing before trying again", source: "Demo-authored illustrative guidance", clientContent: false },
       { id: "SYN-KB-FLOW-01", title: "What to note when flow changes", source: "Demo-authored illustrative guidance", clientContent: false },
     ],
+    innovationSignals: [
+      {
+        id: "descale-on-my-schedule",
+        theme: "“I descale when I remember, not when the light tells me.”",
+        workaround: "Owners set their own phone reminders or descale on a fixed day, ignoring the machine alert.",
+        sources: ["CRC notes", "NPS comments", "Social posts"],
+        trend: "Rising",
+        cohortId: "overdue-descaler",
+        opportunity: "Let owners schedule maintenance in the app at a time that suits them.",
+      },
+      {
+        id: "which-capsule-for-my-cup",
+        theme: "“Which capsule fits my mug?”",
+        workaround: "Owners compare sizes in forums and keep handwritten lists of which capsules they like.",
+        sources: ["App reviews", "Social posts", "CRC notes"],
+        trend: "Steady",
+        cohortId: "setup-sam",
+        opportunity: "An in-app capsule guide or scan that matches capsules to cup size and taste.",
+      },
+      {
+        id: "gift-without-account",
+        theme: "“It was a gift and I never set up an account.”",
+        workaround: "Owners rely on the printed quick-start card and the person who gave them the machine.",
+        sources: ["NPS comments", "App reviews", "Machine events"],
+        trend: "New",
+        cohortId: "silent-struggler",
+        opportunity: "A setup and help path that works before, or without, creating an account.",
+      },
+    ],
     priorityWeights: { impact: 0.4, feasibility: 0.3, strategicFit: 0.3 },
     featureCards: [
       {
@@ -379,6 +408,14 @@
     };
   }
 
+  function innovationSignals() {
+    return dataset.innovationSignals.map((signal) => ({
+      ...signal,
+      status: "synthetic-example",
+      cohortName: dataset.cohorts.find((cohort) => cohort.id === signal.cohortId).name,
+    }));
+  }
+
   function rankIssues() {
     return dataset.issues
       .map((issue) => ({
@@ -542,6 +579,7 @@
     lapseComparison,
     answerCohortPanel,
     answerPersonaQuestion,
+    innovationSignals,
     rankIssues,
     calculatePriorityScore,
     rankFeatureCards,

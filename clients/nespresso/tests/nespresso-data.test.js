@@ -179,3 +179,11 @@ test("persona variations show spread within one cohort", () => {
   assert.ok(new Set(target.variations.map((variation) => variation.stance)).size > 1);
   assert.ok(demo.dataset.conceptVariants.every((variant) => !("incentive" in variant)));
 });
+
+test("innovation signals are synthetic examples linked to known cohorts", () => {
+  const signals = demo.innovationSignals();
+
+  assert.equal(signals.length, 3);
+  assert.ok(signals.every((signal) => signal.status === "synthetic-example" && signal.cohortName && signal.sources.length >= 2));
+  assert.ok(signals.every((signal) => !/\d/.test(signal.theme + signal.workaround + signal.opportunity)));
+});

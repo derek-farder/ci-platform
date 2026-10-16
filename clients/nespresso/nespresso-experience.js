@@ -24,7 +24,7 @@ const initialState = {
 };
 const state = { ...initialState, backlogItems: [] };
 const app = document.querySelector("#icc-app");
-const pages = { doors: "Choose a decision", ask: "Ask", cohort: "Cohorts", simulation: "Experience test", backlog: "Ranked backlog", zoom: "Zoom out", data: "Your data" };
+const pages = { doors: "Welcome", ask: "Ask", cohort: "Cohorts", simulation: "Experience test", backlog: "Ranked backlog", zoom: "Zoom out", data: "Your data" };
 let toastTimer;
 let studyRunToken = 0;
 
@@ -89,14 +89,28 @@ function miniBar(value, max, colorClass = "") {
   return `<span class="mini-bar ${colorClass}"><i style="width:${max ? Math.max(2, value / max * 100) : 0}%"></i></span>`;
 }
 function doors() {
-  const cards = [
-    { id: "innovation", title: "Innovation Advisor", question: "Which pain points hurt NPS most, and which are preventable?", query: "issues", icon: "compass", description: "Find a preventable pain point, test an experience change, and shape a ranked plan." },
-    { id: "persona", title: "Persona Advisor", question: "Which owners may need maintenance help before a blockage?", query: "prevent", icon: "users-round", description: "Start with one cohort and understand the signals behind its needs." },
+  const path = [
+    ["Ask", "Start with “Which pain points hurt NPS most?” and see preventable pain points ranked."],
+    ["Meet the cohort", "Meet the Overdue Descalers and ask a synthetic persona why the descale alert gets left for later."],
+    ["Test an experience change", "Run three descaling concepts past five cohorts and their persona variations, then see the 12-month NPS impact."],
+    ["Decide", "See the winning change land in a ranked backlog and an illustrative roadmap."],
+    ["Zoom out", "Compare NPS and direct repurchase across cohorts, and put one question to all five cohorts at once."],
+    ["Your data", "See what it would take to replace the synthetic data with your own."],
   ];
-  return `${shellHead("INNOVATION COMMAND CENTER · INTERNAL CONCEPT", "What do you want the ICC to help you decide?", "Choose a starting point. Each path joins the same evidence-to-action walkthrough.")}<div class="door-grid">${cards.map((card) => `<button class="door-card" data-door="${card.id}" data-question="${card.question}" data-door-query="${card.query}"><span class="door-icon">${icon(card.icon)}</span><span class="door-copy"><b>${card.title}</b><small>${card.description}</small><em>START WITH A QUESTION ${icon("arrow-right")}</em></span></button>`).join("")}</div><p class="door-footnote">Synthetic personas and cohort data · internal concept</p>`;
+  const cards = [
+    { id: "innovation", title: "Innovation Advisor", tag: "Start from a problem", question: "Which pain points hurt NPS most, and which are preventable?", query: "issues", view: "ask", icon: "compass", description: "You have a question about pain points or customer signals. Find what matters most, test a change, and build a ranked backlog. This is the full guided path." },
+    { id: "persona", title: "Persona Advisor", tag: "Start from a customer", question: "Which owners may need maintenance help before a blockage?", query: "prevent", view: "cohort", icon: "users-round", description: "You want to understand a group of owners. Meet a cohort, ask them questions, and see how they would react to a change before you build it. Joins the guided path at step 2." },
+  ];
+  const rails = [
+    ["Synthetic data", "Every number comes from a synthetic dataset and documented assumptions. No Nespresso customer data is connected."],
+    ["Rule-based results", "Simulated outcomes come from fixed, documented rules, not forecasts. The same inputs always give the same answer."],
+    ["Illustrative voices", "Persona responses are scripted role-play grounded in cohort signals. They are not customer quotes or research findings."],
+  ];
+  return `${shellHead("INNOVATION COMMAND CENTER · CONCEPT DEMO", "Welcome to the Innovation Command Center", "A concept demo of how synthetic personas and connected data could help Nespresso’s innovation team find, test, and prioritize customer-experience improvements faster and at greater scale.")}<section class="icc-card welcome-path">${cardHead("The guided path", "One path walks through the full process. Follow the dark button at the bottom right of each page.")}<ol>${path.map(([title, copy], index) => `<li><i>${index + 1}</i><b>${title}</b><span>${copy}</span></li>`).join("")}</ol><div class="flow-next"><button class="button primary" data-door="innovation" data-question="${cards[0].question}" data-door-query="issues" data-door-view="ask">Start the guided path ${icon("arrow-right")}</button></div></section><h2 class="welcome-heading">Two ways in</h2><div class="door-grid">${cards.map((card) => `<button class="door-card" data-door="${card.id}" data-question="${card.question}" data-door-query="${card.query}" data-door-view="${card.view}"><span class="door-icon">${icon(card.icon)}</span><span class="door-copy"><small class="door-tag">${card.tag.toUpperCase()}</small><b>${card.title}</b><small>${card.description}</small><em>START HERE ${icon("arrow-right")}</em></span></button>`).join("")}</div><div class="welcome-columns"><section class="icc-card">${cardHead("Beyond the guided path", "Everything else is an example.")}<p class="welcome-copy">Other question starters, cohorts, persona questions, and panel prompts show scripted example answers. They are not connected to a live model. As you explore, note the questions you would want the ICC to answer for your team. Those questions are the most useful input for a pilot.</p></section><section class="icc-card">${cardHead("What is real and what is not", "Each output carries one small badge. Select it, or ⓘ in the top bar, for assumptions and method.")}<div class="welcome-rails">${rails.map(([title, copy]) => `<div><b>${title}</b><span>${copy}</span></div>`).join("")}</div><p class="welcome-copy">Nothing you do here is saved or sent anywhere. Reset (↺) returns you to this page.</p></section></div>`;
 }
 
 const questionOptions = [
+  { id: "signals", title: "Workarounds & unmet needs", prompt: "What are owners working around that we could build for?", icon: "lightbulb" },
   { id: "issues", title: "Pain points hurting NPS", prompt: "Which pain points hurt NPS most, and which are preventable?", icon: "chart-no-axes-combined" },
   { id: "prevent", title: "Predict before it breaks", prompt: "Which owners may need maintenance help before a blockage?", icon: "bell-ring" },
   { id: "setup", title: "First-time setup friction", prompt: "Where do new connected owners get stuck during setup?", icon: "smartphone" },
@@ -106,6 +120,7 @@ const questionOptions = [
 ];
 function resolveQuery(value) {
   const text = value.toLowerCase();
+  if (/workaround|unmet|social|review|trend|signal|verbatim|call log|feature|idea|innovat/.test(text)) return "signals";
   if (/grocery|stick|repurchase|retain|loyal|lapse|come back/.test(text)) return "stickiness";
   if (/pair|setup|connect|first brew/.test(text)) return "setup";
   if (/agent|handle|aht|repeat|voice/.test(text)) return "assist";
@@ -121,6 +136,7 @@ function issueRows() {
   return `<tr class="group-row"><th colspan="6">Maintenance pain points</th></tr>${renderRows(maintenance)}<tr class="group-row"><th colspan="6">Other pain points</th></tr>${renderRows(other)}`;
 }
 function answerContent() {
+  if (state.query === "signals") return `<h2 class="answer-title">Three unmet needs appear only when sources are read together.</h2><p class="answer-copy">Example themes combined from contact-center notes, NPS comments, app reviews, social posts, and machine events. Each points to something to build, not just something to fix.</p><div class="signal-themes">${demo.innovationSignals().map((signal) => `<article class="signal-theme"><div class="signal-theme-head"><b>${signal.theme}</b><span class="signal-trend">${signal.trend}</span></div><p><span>Workaround</span>${signal.workaround}</p><p><span>Opportunity</span>${signal.opportunity}</p><div class="chip-row">${signal.sources.map((source) => `<span>${source}</span>`).join("")}<span class="signal-cohort">${signal.cohortName}</span></div></article>`).join("")}</div><div class="data-source">Synthetic example signals · scenario v${demo.dataset.version} · no live social, review, or call data</div>`;
   if (state.query === "issues") return `<h2 class="answer-title">Maintenance pain points lead the relative priority score.</h2><p class="answer-copy">Ranked by contact volume (a pain signal), preventability, and relative NPS impact in the demo dataset. Effort is a 1–7 Customer Effort Score; higher is harder.</p><div class="issue-chart">${demo.rankIssues().map((issue) => `<div class="issue-bar-row"><span>${issue.name}</span>${miniBar(issue.contacts, demo.rankIssues()[0].contacts)}<strong>${number(issue.contacts)}</strong></div>`).join("")}</div><div class="data-source">Demo dataset · scenario v${demo.dataset.version}</div><div class="table-scroll"><table class="issues-table"><thead><tr><th>Rank / reason</th><th>Contacts</th><th>Effort (CES)</th><th>Preventable</th><th>NPS impact</th><th>Relative score</th></tr></thead><tbody>${issueRows()}</tbody></table></div>`;
   const answer = {
     prevent: "Overdue Descalers are the lead synthetic cohort. The scenario assumes ignored descale alerts beyond 60 days are associated with higher blockage-contact risk; validate against first-party data before acting.",
@@ -132,7 +148,7 @@ function answerContent() {
     return `<p class="answer-copy">${answer}</p>`;
 }
 function ask() {
-  return `${shellHead("MOMENT 1 · ASK", "Start with a business question.", "Use a starter or ask in your own words. Results stay linked to their source type.")}<section class="icc-card">${cardHead("Question starters", "Choose one question to open the answer.") }<div class="starter-grid">${questionOptions.map((item) => `<button class="starter-card ${state.query === item.id ? "selected" : ""}" data-query="${item.id}"><i>${icon(item.icon)}</i><b>${item.title}</b><span>${item.prompt}</span></button>`).join("")}</div><form class="ask-form" data-ask-form><label for="ask-question">Ask a question</label><div><input id="ask-question" name="question" value="${escapeHTML(state.question)}" placeholder="Which issues should we address first?"/><button class="button primary" type="submit">Ask ${icon("arrow-right")}</button></div></form><div class="answer-panel">${cardHead("Answer", state.query === "issues" ? "Ranked synthetic dataset baseline" : "Scenario answer", answerBadge("observed", "Observed · demo dataset"))}${answerContent()}</div><div class="flow-next">${actionButton("Meet the cohort", "go-cohort", true, "arrow-right")}</div></section>`;
+  return `${shellHead("MOMENT 1 · ASK", "Start with a business question.", "Use a starter or ask in your own words. Results stay linked to their source type.")}<section class="icc-card">${cardHead("Question starters", "Choose one question to open the answer.") }<div class="starter-grid">${questionOptions.map((item) => `<button class="starter-card ${state.query === item.id ? "selected" : ""}" data-query="${item.id}"><i>${icon(item.icon)}</i><b>${item.title}</b><span>${item.prompt}</span></button>`).join("")}</div><form class="ask-form" data-ask-form><label for="ask-question">Ask a question</label><div><input id="ask-question" name="question" value="${escapeHTML(state.question)}" placeholder="Which issues should we address first?"/><button class="button primary" type="submit">Ask ${icon("arrow-right")}</button></div></form><div class="answer-panel">${cardHead("Answer", state.query === "issues" ? "Ranked synthetic dataset baseline" : state.query === "signals" ? "Example signals combined across sources" : "Scenario answer", answerBadge("observed", state.query === "signals" ? "Synthetic · example signals" : "Observed · demo dataset"))}${answerContent()}</div><div class="flow-next">${actionButton("Meet the cohort", "go-cohort", true, "arrow-right")}</div></section>`;
 }
 function cohortPage() {
   const cohort = getCohort();
@@ -317,7 +333,7 @@ document.addEventListener("click", (event) => {
     state.door = door.dataset.door;
     state.question = door.dataset.question;
     state.query = door.dataset.doorQuery || resolveQuery(state.question);
-    setView("ask");
+    setView(door.dataset.doorView || "ask");
     return;
   }
   if (cohort) { state.cohort = cohort.dataset.cohort; state.voiceQuestion = `What support would help with ${getCohort().name}?`; state.voiceAnswer = null; setView("cohort"); return; }
@@ -329,7 +345,7 @@ document.addEventListener("click", (event) => {
     "go-ask": () => setView("ask"), "go-cohort": () => setView("cohort"),
     "go-simulation": () => setView("simulation"), "go-backlog": () => setView("backlog"),
     "go-zoom": () => setView("zoom"), "go-data": () => setView("data"),
-    "reset-demo": () => { studyRunToken += 1; Object.assign(state, initialState, { backlogItems: [] }); render(); toast("Demo reset to the entry doors."); },
+    "reset-demo": () => { studyRunToken += 1; Object.assign(state, initialState, { backlogItems: [] }); render(); toast("Demo reset to the welcome page."); },
       "add-selected-to-backlog": () => { if (!state.backlogItems.includes("descale-guide")) state.backlogItems.push("descale-guide"); setView("backlog"); },
   };
   actions[action.dataset.action]?.();
