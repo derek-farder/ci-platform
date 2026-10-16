@@ -7,7 +7,7 @@
 .nespresso-shell .nav-item{font-size:11px}
 .nespresso-shell .generic-link[hidden]{display:none!important}
 @media(max-width:620px){
-	.nespresso-shell #icc-navigation{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;width:100%;min-width:0}
+	.nespresso-shell #icc-navigation{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:0;width:100%;min-width:0}
 	.nespresso-shell #icc-navigation .nav-item{width:100%;min-width:0;padding:4px 1px;overflow-wrap:anywhere}
 	.nespresso-shell .data-map-row{grid-template-columns:minmax(0,1fr) auto;min-width:0}
 	.nespresso-shell .data-map-row span{min-width:0;overflow-wrap:anywhere}
@@ -44,3 +44,4 @@
 .nespresso-shell .roadmap-lane:nth-child(3){border-top-color:var(--nx-pillar-loyalty)}
 .nespresso-shell .roadmap-lane:nth-child(4){border-top-color:var(--nx-pillar-conversational)}
 .nespresso-shell .icc-card-head p,.nespresso-shell .icc-subtitle,.nespresso-shell .icc-stat-label,.nespresso-shell .icc-stat-note,.nespresso-shell .answer-copy,.nespresso-shell .data-note,.nespresso-shell .cohort-card p,.nespresso-shell .cohort-profile span,.nespresso-shell .cohort-profile b,.nespresso-shell .voice-cite,.nespresso-shell .control label,.nespresso-shell .control output,.nespresso-shell .assumption span,.nespresso-shell .assumption b,.nespresso-shell .feature-field span,.nespresso-shell .feature-field b,.nespresso-shell .feature-field p,.nespresso-shell .icc-step,.nespresso-shell .question-chip,.nespresso-shell .cohort-row button,.nespresso-shell .cohort-row span,.nespresso-shell .pillars span,.nespresso-shell .preview-question,.nespresso-shell .preview-answer,.nespresso-shell .backlog-meta,.nespresso-shell .chip-row span,.nespresso-shell .roadmap-lane li,.nespresso-shell .data-map-row,.nespresso-shell .single-caveat{font-size:max(11px,1em)}
+.nespresso-shell a.nav-item{text-decoration:none}

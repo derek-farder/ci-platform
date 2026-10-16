@@ -78,7 +78,7 @@ test("simulation rejects invalid horizon and rates", () => {
 
 test("provisional Feature Card score validates its rubric weights", () => {
   assert.equal(demo.calculatePriorityScore(), 81);
-  assert.throws(() => demo.calculatePriorityScore(undefined, { impact: 0.5, feasibility: 0.5, strategicFit: 0.5 }), RangeError);
+  assert.throws(() => demo.calculatePriorityScore(undefined, { cxImpact: 0.5, feasibility: 0.5, strategicFit: 0.5 }), RangeError);
 });
 
 test("simulation scales linearly to 100,000 without changing its percentage", () => {
@@ -177,6 +177,8 @@ test("persona variations show spread within one cohort", () => {
 
   assert.ok(Math.abs(weights - 1) < 1e-10);
   assert.ok(new Set(target.variations.map((variation) => variation.stance)).size > 1);
+  assert.deepEqual(target.variations.map((variation) => variation.count), [900, 1350, 750]);
+  assert.equal(target.variations.reduce((sum, variation) => sum + variation.count, 0), target.cohortCount);
   assert.ok(demo.dataset.conceptVariants.every((variant) => !("incentive" in variant)));
 });
 
@@ -186,4 +188,29 @@ test("innovation signals are synthetic examples linked to known cohorts", () => 
   assert.equal(signals.length, 3);
   assert.ok(signals.every((signal) => signal.status === "synthetic-example" && signal.cohortName && signal.sources.length >= 2));
   assert.ok(signals.every((signal) => !/\d/.test(signal.theme + signal.workaround + signal.opportunity)));
+});
+
+test("cxEffect gives each cohort a simulated NPS shift and effort rating", () => {
+  const study = demo.runConceptStudy({ variantId: "C" });
+  const target = study.reactions.find((reaction) => reaction.cohortId === "overdue-descaler");
+  const silent = study.reactions.find((reaction) => reaction.cohortId === "silent-struggler");
+  const setup = study.reactions.find((reaction) => reaction.cohortId === "setup-sam");
+
+  assert.equal(target.cx.status, "simulated");
+  assert.equal(target.cx.npsPointShift, study.variantComparison.find((item) => item.id === "C").npsPointShift);
+  assert.ok(target.cx.npsRange.low <= target.cx.npsPointShift && target.cx.npsRange.high >= target.cx.npsPointShift);
+  assert.equal(target.cx.effort, "Medium");
+  assert.equal(setup.cx.effort, "Low");
+  assert.equal(silent.cx.effort, "High");
+  assert.ok(silent.cx.npsPointShift < target.cx.npsPointShift);
+  assert.equal(demo.runConceptStudy({ variantId: "A" }).reactions.find((reaction) => reaction.cohortId === "overdue-descaler").cx.effort, "High");
+  assert.throws(() => demo.cxEffect({ cohortId: "overdue-descaler", uptake: 0.2, effect: 0.3, completionRate: 1.2 }), RangeError);
+  assert.throws(() => demo.simulateDescaleNudge({ cohortId: "unknown" }), RangeError);
+});
+
+test("backlog cards carry CX impact and cost to serve", () => {
+  const ranked = demo.rankFeatureCards();
+
+  assert.deepEqual(ranked.map((feature) => feature.cxImpact), ["High", "High", "Medium", "Medium"]);
+  assert.ok(ranked.every((feature) => feature.costToServe));
 });

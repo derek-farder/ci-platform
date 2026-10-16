@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The Innovation Command Center: test customer-experience ideas on a synthetic customer panel before you build them." />
+    <title>Innovation Command Center | Test the idea before you build it</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="nespresso-brand.css" />
+    <link rel="stylesheet" href="nespresso-auth.css" />
+    <link rel="stylesheet" href="nespresso-landing.css?v=20261015-1" />
+    <script src="nespresso-auth.js"></script>
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="nespresso-landing.js?v=20261015-1" defer></script>
+  </head>
+  <body>
+    <main id="auth-gate" aria-label="Sign in">
+      <form class="auth-card" id="auth-form" autocomplete="off">
+        <img src="assets/brand/Nespresso_logo.png" alt="Nespresso" />
+        <div class="icc-kicker"><i></i>CONCEPT DEMO</div>
+        <h1>Innovation Command Center</h1>
+        <p>Sign in to read the overview and open the demo.</p>
+        <label for="auth-username">Username</label>
+        <input id="auth-username" name="username" type="text" autocapitalize="none" spellcheck="false" required />
+        <label for="auth-password">Password</label>
+        <input id="auth-password" name="password" type="password" required />
+        <p class="auth-error" id="auth-error" role="alert"></p>
+        <button class="button primary" type="submit">Sign in</button>
+      </form>
+    </main>
+
+    <div class="nespresso-shell landing" id="icc-app" tabindex="-1">
+      <header class="lp-header">
+        <a class="lp-brand" href="#top"><span class="lp-logo"><img src="assets/brand/Nespresso_logo.png" alt="Nespresso" /></span><span>Innovation Command Center</span></a>
+        <nav class="lp-nav" aria-label="Page sections">
+          <a href="#what-it-is">What it is</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#funnel">The funnel</a>
+          <a href="#trust">Trust</a>
+          <a href="#outcomes">Outcomes</a>
+          <a href="#poc">PoC to scale</a>
+        </nav>
+        <a class="button primary lp-header-cta" href="nespresso.html">See it in action</a>
+      </header>
+
+      <main>
+        <section class="lp-section lp-hero" id="top">
+          <div class="lp-kicker"><i></i>INNOVATION COMMAND CENTER · CONCEPT</div>
+          <h1>Test the idea before you build it.</h1>
+          <p class="lp-lead">The Innovation Command Center helps Nespresso’s innovation team find the experience problems that matter most, try many solutions on a panel of synthetic customers built from our own data, and bring stronger evidence to every go/no-go decision.</p>
+          <div class="lp-actions">
+            <a class="button primary" href="nespresso.html">See it in action <i data-lucide="arrow-right"></i></a>
+            <a class="button" href="#how-it-works">How it works <i data-lucide="arrow-down"></i></a>
+          </div>
+        </section>
+
+        <section class="lp-section" id="what-it-is" aria-labelledby="what-it-is-title">
+          <div class="lp-kicker"><i></i>WHAT THE ICC IS</div>
+          <h2 id="what-it-is-title">A flight simulator for customer-experience ideas.</h2>
+          <p class="lp-analogy">Think of it as a flight simulator for customer-experience ideas. Pilots still fly real planes; they just arrive having practised the hard parts.</p>
+          <div class="lp-cards lp-cards-3">
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="compass"></i></span><h3>Innovation Advisor</h3><p class="lp-card-tag">Finds where to focus.</p><p>It reads service, machine and research data plus public studies, and points to the pain points most worth solving.</p></article>
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="users-round"></i></span><h3>Synthetic customer panel</h3><p class="lp-card-tag">Tests ideas at scale.</p><p>Hundreds of synthetic respondents, built from Nespresso’s own customer segments, react to concepts, prototypes and delivery options, and explain why.</p></article>
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="clipboard-check"></i></span><h3>Evidence and learning</h3><p class="lp-card-tag">Turns answers into decisions.</p><p>Results feed the stage gates and backlog, and every real-world result makes the panel more accurate.</p></article>
+          </div>
+        </section>
+
+        <section class="lp-section" id="how-it-works" aria-labelledby="how-it-works-title">
+          <div class="lp-kicker"><i></i>HOW IT WORKS</div>
+          <h2 id="how-it-works-title">Same process, more evidence at every step.</h2>
+          <div class="lp-process-bar">
+            <p class="lp-note">Typical process. We’ll tailor this to yours.</p>
+            <div class="lp-switch-wrap">
+              <span id="mode-today-label">Today</span>
+              <button class="lp-switch" id="mode-switch" role="switch" aria-checked="true" aria-labelledby="mode-today-label mode-icc-label"><span></span></button>
+              <span id="mode-icc-label">With the ICC</span>
+            </div>
+          </div>
+          <div class="lp-stepper" role="tablist" aria-label="Innovation process steps" id="stepper"></div>
+          <div class="lp-step-panel" role="tabpanel" id="step-panel" tabindex="0"></div>
+          <ul class="lp-legend" aria-label="Legend">
+            <li><span class="lp-tag tag-new">New</span>A step that doesn’t exist today.</li>
+            <li><span class="lp-tag tag-assisted">Assisted</span>The ICC does the heavy lifting; your team reviews.</li>
+            <li><span class="lp-tag tag-human">Human-led</span>Your team runs it and decides; the ICC supplies evidence.</li>
+          </ul>
+          <table class="lp-print-table" id="print-table"><caption>Typical process. We’ll tailor this to yours.</caption><thead><tr><th>Step</th><th>Today</th><th>With the ICC</th></tr></thead><tbody></tbody></table>
+          <blockquote class="lp-quote">“It doesn’t replace your 10 customers. It makes them count.”</blockquote>
+        </section>
+
+        <section class="lp-section" id="funnel" aria-labelledby="funnel-title">
+          <div class="lp-kicker"><i></i>THE FUNNEL</div>
+          <h2 id="funnel-title">More ideas get a fair look. Fewer weak ones reach a prototype.</h2>
+          <div class="lp-funnels">
+            <figure class="lp-funnel">
+              <figcaption class="lp-funnel-title">Today</figcaption>
+              <div class="lp-funnel-stage" style="--w:32%"><span>A few ideas</span></div>
+              <div class="lp-funnel-stage" style="--w:28%"><span>Prototype</span></div>
+              <div class="lp-funnel-stage" style="--w:22%"><span>10 customers</span></div>
+              <div class="lp-funnel-stage" style="--w:16%"><span>Build</span></div>
+              <p>Testing is expensive, so few ideas get tested and prototypes come early.</p>
+            </figure>
+            <figure class="lp-funnel">
+              <figcaption class="lp-funnel-title">With the ICC</figcaption>
+              <div class="lp-funnel-stage" style="--w:100%"><span>Many ideas and variations</span></div>
+              <div class="lp-funnel-stage stage-panel" style="--w:42%"><span>Synthetic panel screen</span></div>
+              <div class="lp-funnel-stage" style="--w:22%"><span>10 customers</span></div>
+              <div class="lp-funnel-stage" style="--w:16%"><span>Build</span></div>
+              <p>Testing becomes cheap early, so more ideas get a fair look and fewer weak ones reach a prototype. Your 10 customers see only the best one or two.</p>
+            </figure>
+          </div>
+          <p class="lp-note">Widths are relative and illustrative, not measured.</p>
+        </section>
+
+        <section class="lp-section" id="trust" aria-labelledby="trust-title">
+          <div class="lp-kicker"><i></i>WHY YOU CAN TRUST IT</div>
+          <h2 id="trust-title">Synthetic for direction, real customers for decisions.</h2>
+          <div class="lp-cards lp-cards-5">
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="database"></i></span><h3>Built from your data</h3><p>Personas come from Nespresso’s own segments, user stories and service data, not generic internet profiles.</p></article>
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="tags"></i></span><h3>Every answer is labeled</h3><p>Observed, simulated and persona voice are always distinct, so you know what kind of evidence you’re looking at.</p></article>
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="list-checks"></i></span><h3>Checked against what you already know</h3><p>Before it’s trusted on new ideas, the panel must reproduce pain points you’ve already found.</p></article>
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="user-check"></i></span><h3>People decide</h3><p>Every gate decision stays with the team; the panel informs, it doesn’t approve.</p></article>
+            <article class="lp-card"><span class="lp-icon"><i data-lucide="gauge"></i></span><h3>Confidence you can see, and it grows</h3><p>Each result shows its confidence level, and real-world outcomes recalibrate the panel over time.</p></article>
+          </div>
+        </section>
+
+        <section class="lp-section" id="outcomes" aria-labelledby="outcomes-title">
+          <div class="lp-kicker"><i></i>WHAT IT HELPS MOVE</div>
+          <h2 id="outcomes-title">Outcomes, not technology.</h2>
+          <div class="lp-columns">
+            <article class="lp-card"><h3>Customer experience</h3><ul><li>NPS</li><li>Customer effort</li><li>CSAT</li><li>First-time-right setup</li><li>Machines connected</li><li>Problems solved without calling</li><li>Repeat contacts</li></ul></article>
+            <article class="lp-card"><h3>Innovation process</h3><ul><li>Time from idea to gate decision</li><li>Ideas and variations tested per cycle</li><li>Weak ideas stopped before prototyping</li><li>Late-stage rework</li><li>One shared evidence base across Innovation, CRC, data and tech</li></ul></article>
+          </div>
+          <p class="lp-note">The PoC proves the approach works with Nespresso’s data. These are the outcomes a scaled ICC is built to move.</p>
+        </section>
+
+        <section class="lp-section" id="poc" aria-labelledby="poc-title">
+          <div class="lp-kicker"><i></i>FROM POC TO A NEW WAY OF INNOVATING</div>
+          <h2 id="poc-title">Start small, prove it, then scale.</h2>
+          <ol class="lp-horizons">
+            <li><span class="lp-horizon-step">Today</span><h3>Sequential and research-limited</h3><p>Prototype-first. Testing is slow, so few ideas are explored.</p></li>
+            <li class="lp-horizon-poc"><span class="lp-horizon-step">The PoC · a small test run</span><h3>Machine Assistance</h3><p>Uses the 5 segments, user stories and telemetry you already have. Proves the panel is credible and makes the most of existing data.</p><p>A few real concepts, such as setup guidance, maintenance help and connected-machine ideas, run through the full loop.</p></li>
+            <li><span class="lp-horizon-step">Scaled ICC</span><h3>A new way of innovating</h3><p>More pillars: Subscription, Loyalty, Conversational, Farm-to-cup. Continuous opportunity triage, research focused where it matters most, and a learning capability that compounds.</p></li>
+          </ol>
+          <table class="lp-from-to">
+            <thead><tr><th>From</th><th>To</th></tr></thead>
+            <tbody>
+              <tr><td>Innovation backlog</td><td>Continuous opportunity triage</td></tr>
+              <tr><td>Research as a bottleneck</td><td>Research focused where it matters most</td></tr>
+              <tr><td>Prototype-first validation</td><td>Evidence before significant build investment</td></tr>
+              <tr><td>One-off innovation projects</td><td>A reusable innovation capability</td></tr>
+              <tr><td>“Can we build it?”</td><td>“Is this the right thing to build?”</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="lp-section lp-close" id="next" aria-labelledby="next-title">
+          <h2 id="next-title">See the future state in action.</h2>
+          <p class="lp-lead">The demo shows where the ICC could go, using synthetic data. The PoC is the first, small step toward it.</p>
+          <div class="lp-actions">
+            <a class="button primary" href="nespresso.html">See it in action <i data-lucide="arrow-right"></i></a>
+            <button class="button" type="button" id="share-page"><i data-lucide="link"></i>Share this page</button>
+            <button class="button" type="button" id="print-page"><i data-lucide="printer"></i>Print / Save as PDF</button>
+          </div>
+          <p class="lp-share-status" id="share-status" role="status" aria-live="polite"></p>
+        </section>
+      </main>
+
+      <footer class="lp-footer">Concept by Slalom × AWS · Illustrative demo · No Nespresso customer data.</footer>
+    </div>
+  </body>
+</html>

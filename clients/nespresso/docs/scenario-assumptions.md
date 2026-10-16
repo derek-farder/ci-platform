@@ -36,7 +36,7 @@ The following attributes were supplied in the v0.3 demo brief and remain provisi
 
 Concept variants are provisional experience changes, not campaigns or offers: A · Clearer alert (in-app alert, no guided steps, 0.20 risk reduction if completed); B · Guided in-app descaling (in-app guide, 2-minute steps, 0.32); C · Proactive check-in (in-app guide plus email check-in, 2-minute steps, 0.40). Stance cutoffs are Likely ≥0.30, Maybe ≥0.15, and Unlikely below 0.15; these are demo conventions, not calibrated behavioral thresholds.
 
-**Persona variations (added in v0.4, provisional).** Each cohort is scored as three variations to show that people in one cohort answer differently: Tech-confident (30% weight; reach ×1.2, notice ×1.1, act ×1.15), Time-poor (45%; ×1.0, ×0.9, ×0.95), and Skeptical (25%; ×0.9, ×0.85, ×0.7). Reach and notice are capped at 1 and act at 0.95. Cohort completion and funnel stages are the weighted mean across variations; the stance split is the weight share of variations in each stance. Weights, multipliers, and lens phrases are demo-authored, not measured segments.
+**Persona variations (added in v0.4, provisional).** Each cohort is scored as three variations to show that people in one cohort answer differently: Tech-confident (30% weight; reach ×1.2, notice ×1.1, act ×1.15), Time-poor (45%; ×1.0, ×0.9, ×0.95), and Skeptical (25%; ×0.9, ×0.85, ×0.7). Reach and notice are capped at 1 and act at 0.95. Cohort completion and funnel stages are the weighted mean across variations; the stance split is the weight share of variations in each stance. Each variation also shows a head count (weight × cohort count, e.g. Overdue Descaler 900 / 1,350 / 750 of 3,000) so the three variations read as the spread across everyone in the cohort. Weights, multipliers, lens phrases, and counts are demo-authored, not measured segments.
 
 **CX metrics (added in v0.4, provisional).** NPS was named by the client team; Customer Effort Score and direct repurchase rate were added as related CX measures and should be confirmed with them. Synthetic NPS baselines: Setup Sam 18, Overdue Descaler 24, Connected Enthusiast 52, Silent Struggler 6, Susie Serial Reactivator 10. These replace the v0.3 provisional subscription shares and were not supplied by Nespresso.
 
@@ -61,6 +61,14 @@ The following numbers were added only to make the prototype calculable. They are
 - AWS source-system names and statuses in the “Your data” bridge. These are examples for discussion, not confirmed integrations.
 - Provisional Feature Card scoring weights of 40% impact, 30% feasibility, and 30% strategic fit, plus input scores. The Nessy Chapter 1 fit and rubric require client validation.
 - Synthetic population metadata and demo-authored knowledge article titles. Knowledge content is not Nespresso intellectual property.
+
+## Per-cohort CX readout and backlog fields (added after v0.4, provisional)
+
+Each panel card shows a simulated NPS direction and range plus a customer-effort rating from `cxEffect` in [`../nespresso-data.js`](../nespresso-data.js):
+
+- **NPS shift per cohort** reuses the 12-month simulation rule with that cohort's monthly base issue rate, its study-derived completion, and the variant's risk reduction. The 3.5× ignored-alert multiplier applies only to Overdue Descaler; other cohorts use a 1× multiplier. The same 0.5 detractor share and ±12% sensitivity band apply. Direction labels are Up (≥0.5 pts), Slightly up (>0), and No change. The Overdue Descaler card therefore matches the impact page.
+- **Customer effort** is Low when the cohort's weighted completion rate is ≥0.50, Medium when it is ≥0.35, and High otherwise. These cutoffs are demo conventions, not calibrated CES thresholds.
+- **Backlog fields:** the priority input formerly called “impact” is now “CX impact (NPS / effort)” with the same values and 40% weight, so scores and ranks are unchanged. Labels are High (≥0.80), Medium (≥0.65), or Low. Cost-to-serve labels are demo-authored: agent assist “Lower: shorter blockage calls”; descaling guide “Lower: fewer blockage calls”; pairing assistant “Lower: fewer repeat pairing chats”; proactive help for unregistered owners “Neutral: reaches owners who rarely call”. The former “Effort” label is now “Build effort” to avoid confusion with customer effort.
 
 ## Innovation signals (added after v0.4, provisional)
 

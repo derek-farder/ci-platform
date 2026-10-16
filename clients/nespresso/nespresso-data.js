@@ -108,6 +108,8 @@
       capsulePriceRangeEur: { low: 0.50, high: 0.85 },
       resolvedContactLapseRate: 0.08,
       detractorShareAfterIssueEvent: 0.5,
+      effortLowCompletionRate: 0.5,
+      effortMediumCompletionRate: 0.35,
     },
     conceptVariants: [
       { id: "A", name: "Clearer alert", channel: "In-app alert", tutorial: false, emailCheckIn: false, effectIfActed: 0.20 },
@@ -153,7 +155,7 @@
         opportunity: "A setup and help path that works before, or without, creating an account.",
       },
     ],
-    priorityWeights: { impact: 0.4, feasibility: 0.3, strategicFit: 0.3 },
+    priorityWeights: { cxImpact: 0.4, feasibility: 0.3, strategicFit: 0.3 },
     featureCards: [
       {
         id: "blockage-agent-assist",
@@ -164,7 +166,8 @@
         effort: "Medium",
         dataNeeded: ["CRC reason + AHT", "Resolution codes", "Approved troubleshooting content"],
         productionDataNeeded: "CRC contact reason and resolution; AHT; machine model and event telemetry; approved knowledge sources.",
-        priorityInputs: { impact: 0.91, feasibility: 0.62, strategicFit: 0.85 },
+        priorityInputs: { cxImpact: 0.91, feasibility: 0.62, strategicFit: 0.85 },
+        costToServe: "Lower: shorter blockage calls",
       },
       {
         id: "descale-guide",
@@ -173,9 +176,10 @@
         cohortId: "overdue-descaler",
         nessyFit: "High",
         effort: "Medium",
-        dataNeeded: ["Descale events", "Nudge exposure + action", "CRC reasons"],
+        dataNeeded: ["Descale events", "Guide exposure + completion", "CRC reasons"],
         productionDataNeeded: "Consent and channel eligibility; machine model and event telemetry; guide exposure and completion; NPS/VoC responses; CRC reason and resolution; order outcomes.",
-        priorityInputs: { impact: 0.86, feasibility: 0.72, strategicFit: 0.8 },
+        priorityInputs: { cxImpact: 0.86, feasibility: 0.72, strategicFit: 0.8 },
+        costToServe: "Lower: fewer blockage calls",
       },
       {
         id: "pairing-assistant",
@@ -186,7 +190,8 @@
         effort: "Medium",
         dataNeeded: ["Pairing errors", "Device + app state", "Setup completion"],
         productionDataNeeded: "Machine and app pairing events; model/firmware; consent and channel eligibility; support contact outcomes.",
-        priorityInputs: { impact: 0.78, feasibility: 0.82, strategicFit: 0.78 },
+        priorityInputs: { cxImpact: 0.78, feasibility: 0.82, strategicFit: 0.78 },
+        costToServe: "Lower: fewer repeat pairing chats",
       },
       {
         id: "unregistered-proactive-help",
@@ -197,7 +202,8 @@
         effort: "High",
         dataNeeded: ["Registration status", "Order cadence", "Consent + eligibility"],
         productionDataNeeded: "Registration and machine ownership; order cadence; consent, eligibility, and suppression rules; support history where available.",
-        priorityInputs: { impact: 0.70, feasibility: 0.68, strategicFit: 0.72 },
+        priorityInputs: { cxImpact: 0.70, feasibility: 0.68, strategicFit: 0.72 },
+        costToServe: "Neutral: reaches owners who rarely call",
       },
     ],
     featureCardNotes: {
@@ -275,7 +281,7 @@
     function score(cohort, variant) {
       const variations = dataset.personaVariations.map((variation) => {
         const funnel = funnelFor(cohort.engagement, variant, variation.multipliers);
-        return { id: variation.id, name: variation.name, lens: variation.lens, weight: variation.weight, expectedUptake: funnel.uptake, stance: stanceFor(funnel.uptake), funnel };
+        return { id: variation.id, name: variation.name, lens: variation.lens, weight: variation.weight, count: Math.round(variation.weight * cohortCount(cohort)), expectedUptake: funnel.uptake, stance: stanceFor(funnel.uptake), funnel };
       });
       const weighted = (key) => variations.reduce((sum, variation) => sum + variation.weight * variation.funnel[key], 0);
       const reach = weighted("reach");
@@ -283,6 +289,7 @@
       const actRate = weighted("act");
       const expectedUptake = weighted("uptake");
       const stance = stanceFor(expectedUptake);
+      const cx = cxEffect({ cohortId: cohort.id, uptake: expectedUptake, effect: variant.effectIfActed, completionRate: actRate, delayDays });
       const stanceSplit = ["Likely", "Maybe", "Unlikely"].map((label) => ({
         stance: label,
         share: variations.filter((variation) => variation.stance === label).reduce((sum, variation) => sum + variation.weight, 0),
@@ -309,6 +316,8 @@
         stance,
         expectedUptake,
         stanceSplit,
+        cx,
+        cohortCount: cohortCount(cohort),
         variations: variations.map(({ funnel, ...variation }) => variation),
         funnel: { reach, notice, act: actRate },
         barrierKey,
@@ -429,8 +438,27 @@
     const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
     if (Math.abs(totalWeight - 1) > 1e-9) throw new RangeError("Priority weights must sum to 1.");
     return Math.round(
-      (inputs.impact * weights.impact + inputs.feasibility * weights.feasibility + inputs.strategicFit * weights.strategicFit) * 100,
+      (inputs.cxImpact * weights.cxImpact + inputs.feasibility * weights.feasibility + inputs.strategicFit * weights.strategicFit) * 100,
     );
+  }
+
+  function cxEffect({ cohortId, uptake, effect, completionRate, delayDays = dataset.rules.defaultNudgeDelayDays }) {
+    if (!Number.isFinite(completionRate) || completionRate < 0 || completionRate > 1) throw new RangeError("Completion rate must be between 0 and 1.");
+    const impact = simulateDescaleNudge({ cohortId, uptake, effect, nudgeDelayDays: delayDays });
+    const shift = impact.midpoint.npsPointShift;
+    const effort = completionRate >= dataset.rules.effortLowCompletionRate ? "Low" : completionRate >= dataset.rules.effortMediumCompletionRate ? "Medium" : "High";
+    return {
+      status: "simulated",
+      cohortId,
+      npsPointShift: shift,
+      npsRange: impact.ranges.npsPointShift,
+      npsDirection: shift >= 0.5 ? "Up" : shift > 0 ? "Slightly up" : "No change",
+      effort,
+    };
+  }
+
+  function cxImpactLabel(score) {
+    return score >= 0.8 ? "High" : score >= 0.65 ? "Medium" : "Low";
   }
 
   function rankFeatureCards() {
@@ -438,6 +466,7 @@
       ...feature,
       cohort: dataset.cohorts.find((cohort) => cohort.id === feature.cohortId),
       priorityScore: calculatePriorityScore(feature.priorityInputs, dataset.priorityWeights),
+      cxImpact: cxImpactLabel(feature.priorityInputs.cxImpact),
     })).sort((left, right) => right.priorityScore - left.priorityScore);
   }
 
@@ -449,7 +478,8 @@
     const startMonth = Math.max(1, Math.ceil(nudgeDelayDays / 30));
     const uncertainty = options.uncertainty ?? dataset.rules.projectionRangeFraction;
     const scaleToCustomers = options.scaleToCustomers ?? null;
-    const cohort = dataset.cohorts.find((item) => item.id === "overdue-descaler");
+    const cohort = dataset.cohorts.find((item) => item.id === (options.cohortId ?? "overdue-descaler"));
+    if (!cohort) throw new RangeError("Unknown synthetic cohort.");
 
     if (![uptake, effect, uncertainty].every((value) => Number.isFinite(value) && value >= 0 && value <= 1)) {
       throw new RangeError("Uptake, effect, and uncertainty must be between 0 and 1.");
@@ -473,7 +503,7 @@
 
     const customers = scaleToCustomers ?? cohortSize;
     const scaleFactor = customers / cohortSize;
-    const riskMultiplier = dataset.rules.blockageRiskMultiplier;
+    const riskMultiplier = cohort.id === "overdue-descaler" ? dataset.rules.blockageRiskMultiplier : 1;
     const monthlyIssueRisk = cohort.baseIssueRateMonthly * riskMultiplier;
     const monthly = Array.from({ length: horizonMonths }, (_, index) => {
       const month = index + 1;
@@ -586,5 +616,6 @@
     runConceptStudy,
     resolveConceptImpactInputs,
     simulateDescaleNudge,
+    cxEffect,
   };
 });
