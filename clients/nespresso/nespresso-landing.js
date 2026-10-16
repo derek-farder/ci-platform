@@ -5,7 +5,7 @@ const steps = [
   { id: "options", label: "3", title: "Generate options", kind: "assisted", today: "One or two concepts, because testing is expensive.", icc: "Many variations, including different ways of reaching the customer." },
   { id: "panel", label: "4", title: "Synthetic panel test", kind: "new", today: "This step doesn’t exist today.", icc: "The panel reacts to every variation: appeal, ease, likely effect on NPS and effort, barriers, and who it misses. Weak options drop out here." },
   { id: "gate-prototype", gate: true, title: "Gate: worth prototyping?", kind: "human", today: "Often decided before the key questions are answered.", icc: "Decided on comparable evidence." },
-  { id: "customer-test", label: "5", title: "Customer test", kind: "human", today: "About 10 customers test the prototype.", icc: "The same 10 or so customers, now focused on the top one or two options and the questions the panel couldn’t settle." },
+  { id: "customer-test", label: "5", title: "Customer test", kind: "human", today: "A small group of customers test the prototype.", icc: "The same small group of customers, now focused on the top one or two options and the questions the panel couldn’t settle." },
   { id: "adjust", label: "6", title: "Adjust", kind: "human", today: "Rework after late findings.", icc: "Fewer late surprises; changes are smaller." },
   { id: "gate-go", gate: true, title: "Gate: go/no-go", kind: "human", today: "Evidence is spread across documents.", icc: "One evidence pack with confidence levels." },
   { id: "backlog", label: "7", title: "Backlog and learn", kind: "assisted", today: "Items join the backlog; learning stays in reports.", icc: "Items join with their evidence attached; live results recalibrate the panel." },
